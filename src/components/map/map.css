@@ -1,0 +1,8 @@
+.leaflet-control-container .leaflet-control-attribution,
+.leaflet-control-container .leaflet-control-zoom {
+  display: none !important;
+}
+
+.leaflet-container a {
+  display: none !important;
+}
