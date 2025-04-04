@@ -36,11 +36,6 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
-            <span className="text-sm">👤</span>
-          </div>
-        </div>
       </div>
     </header>
   );

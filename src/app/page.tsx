@@ -154,7 +154,7 @@ export default function Home() {
                         <div
                           className={`${getBadgeColor(
                             incident.incident_type
-                          )} text-xs px-2 py-1 rounded-full`}
+                          )} text-xs px-2 py-1 rounded-full whitespace-nowrap`}
                         >
                           {incident.incident_type}
                         </div>
