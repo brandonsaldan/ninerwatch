@@ -14,26 +14,20 @@ export default function Home() {
       <Header />
 
       <main className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>Campus Map</CardTitle>
-              <CardDescription>
-                Real-time incident tracking at UNC Charlotte
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <Card className="lg:col-span-3">
+            <CardContent className="pt-6 h-[700px]">
               <CampusMap />
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Recent Incidents</CardTitle>
               <CardDescription>Latest reported events</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-4 max-h-[540px] overflow-y-auto pr-2">
                 <div className="pb-4 border-b border-border">
                   <div className="flex justify-between items-start">
                     <div>
@@ -84,52 +78,40 @@ export default function Home() {
                     Yesterday, 8:45 PM
                   </p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Incidents This Week</CardTitle>
-              <CardDescription>7-day summary</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[200px] bg-muted rounded-md flex items-center justify-center">
-                <p className="text-muted-foreground">
-                  Chart will be displayed here
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="pb-4 border-b border-border">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-medium">Vandalism</h3>
+                      <p className="text-sm text-muted-foreground">
+                        South Village Deck
+                      </p>
+                    </div>
+                    <div className="bg-red-500/10 text-red-500 text-xs px-2 py-1 rounded-full">
+                      Vandalism
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Yesterday, 4:15 PM
+                  </p>
+                </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Incident Types</CardTitle>
-              <CardDescription>Distribution by category</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[200px] bg-muted rounded-md flex items-center justify-center">
-                <p className="text-muted-foreground">
-                  Chart will be displayed here
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Campus Hotspots</CardTitle>
-              <CardDescription>
-                Areas with highest incident rates
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[200px] bg-muted rounded-md flex items-center justify-center">
-                <p className="text-muted-foreground">
-                  Chart will be displayed here
-                </p>
+                <div className="pb-4 border-b border-border">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-medium">Lost Property</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Atkins Library
+                      </p>
+                    </div>
+                    <div className="bg-purple-500/10 text-purple-500 text-xs px-2 py-1 rounded-full">
+                      Lost Item
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    2 days ago, 3:30 PM
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
