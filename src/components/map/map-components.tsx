@@ -4,6 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
+import { useIncidents } from "@/context/incidents-context";
+import { formatDistanceToNow } from "date-fns";
 
 const incidentEmojis: Record<string, string> = {
   Investigate: "🔍",
@@ -52,12 +54,6 @@ const incidentEmojis: Record<string, string> = {
   Crash: "💥",
   Assault: "👊",
   "Assist CMPD": "🚔",
-  Theft: "💰",
-  Accident: "💥",
-  Report: "📋",
-  Vandalism: "🔨",
-  "Lost Item": "🔎",
-
   Default: "❗",
 };
 
@@ -87,56 +83,38 @@ const createCustomIcon = (type: string) => {
   });
 };
 
-const incidents = [
-  {
-    id: 1,
-    title: "Theft Report",
-    location: "Student Union",
-    type: "Theft",
-    lat: 35.308,
-    lng: -80.733,
-    time: "Today, 2:30 PM",
-  },
-  {
-    id: 2,
-    title: "Traffic Accident",
-    location: "East Deck 1",
-    type: "Accident",
-    lat: 35.307,
-    lng: -80.731,
-    time: "Today, 11:15 AM",
-  },
-  {
-    id: 3,
-    title: "Suspicious Activity",
-    location: "Fretwell Building",
-    type: "Suspicious Person",
-    lat: 35.306,
-    lng: -80.735,
-    time: "Yesterday, 8:45 PM",
-  },
-  {
-    id: 4,
-    title: "Vandalism",
-    location: "South Village Deck",
-    type: "Damage to Property",
-    lat: 35.305,
-    lng: -80.736,
-    time: "Yesterday, 4:15 PM",
-  },
-  {
-    id: 5,
-    title: "Lost Property",
-    location: "Atkins Library",
-    type: "Lost or Stolen",
-    lat: 35.309,
-    lng: -80.732,
-    time: "2 days ago, 3:30 PM",
-  },
-];
+const formatDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  } catch {
+    return dateString;
+  }
+};
 
 export default function MapComponents() {
+  const { incidents, loading, error } = useIncidents();
   const center = [35.3075, -80.7331];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        Loading incidents data...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        Error loading incidents: {error}
+      </div>
+    );
+  }
+
+  const mappableIncidents = incidents
+    .filter((incident) => incident.lat && incident.lng)
+    .slice(0, 50);
 
   return (
     <MapContainer
@@ -153,23 +131,31 @@ export default function MapComponents() {
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
 
-      {incidents.map((incident) => (
+      {mappableIncidents.map((incident) => (
         <Marker
           key={incident.id}
-          position={[incident.lat, incident.lng]}
-          icon={createCustomIcon(incident.type)}
+          position={[incident.lat!, incident.lng!]}
+          icon={createCustomIcon(incident.incident_type)}
         >
           <Popup>
             <div className="p-1">
-              <h3 className="font-medium text-sm">{incident.title}</h3>
+              <h3 className="font-medium text-sm">{incident.incident_type}</h3>
               <p className="text-xs text-muted-foreground">
-                {incident.location}
+                {incident.incident_location}
               </p>
-              <p className="text-xs mt-1">{incident.time}</p>
+              <p className="text-xs mt-1">
+                {formatDate(incident.time_reported)}
+              </p>
+              {incident.incident_description && (
+                <p className="text-xs mt-1 max-w-64 truncate">
+                  {incident.incident_description}
+                </p>
+              )}
               <div className="mt-1">
                 <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/20">
-                  {incidentEmojis[incident.type] || incidentEmojis.Default}{" "}
-                  {incident.type}
+                  {incidentEmojis[incident.incident_type] ||
+                    incidentEmojis.Default}{" "}
+                  {incident.disposition || "Open"}
                 </span>
               </div>
             </div>
