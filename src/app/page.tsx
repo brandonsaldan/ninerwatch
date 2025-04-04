@@ -21,17 +21,60 @@ export default function Home() {
       Larceny: "bg-yellow-500/10 text-yellow-500",
       Theft: "bg-yellow-500/10 text-yellow-500",
       "Lost or Stolen": "bg-purple-500/10 text-purple-500",
+      Fraud: "bg-yellow-500/10 text-yellow-500",
+
       "Accident/Property": "bg-orange-500/10 text-orange-500",
       "Vehicle Accident": "bg-orange-500/10 text-orange-500",
       "Hit and Run": "bg-orange-500/10 text-orange-500",
+      "Hit and Run/Property": "bg-orange-500/10 text-orange-500",
+      "Disabled Vehicle": "bg-orange-500/10 text-orange-500",
+      "Vehicle Lockout": "bg-orange-500/10 text-orange-500",
+      "Traffic Stop": "bg-orange-500/10 text-orange-500",
+      Crash: "bg-orange-500/10 text-orange-500",
+      "Parking Violation": "bg-orange-300/10 text-orange-300",
+      "Illegal Parking": "bg-orange-300/10 text-orange-300",
+
       "Suspicious Person": "bg-blue-500/10 text-blue-500",
       "Suspicious Vehicle": "bg-blue-500/10 text-blue-500",
       Investigate: "bg-blue-500/10 text-blue-500",
+      "Follow Up": "bg-blue-400/10 text-blue-400",
+      BOLO: "bg-blue-600/10 text-blue-600",
+      Loitering: "bg-blue-300/10 text-blue-300",
+      "Loitering/Trespassing": "bg-blue-300/10 text-blue-300",
+
       "Damage to Property": "bg-red-500/10 text-red-500",
       Vandalism: "bg-red-500/10 text-red-500",
+
       "Welfare Check": "bg-green-500/10 text-green-500",
       "Injured/Ill Subject": "bg-green-500/10 text-green-500",
-      // todo: add more types and colors
+      "Injured Subject": "bg-green-500/10 text-green-500",
+      Suicide: "bg-green-600/10 text-green-600",
+      "Suicide Ideation": "bg-green-600/10 text-green-600",
+      "Intoxicated Person": "bg-green-400/10 text-green-400",
+
+      "Elevator Call": "bg-cyan-500/10 text-cyan-500",
+      "Disabled Elevator": "bg-cyan-500/10 text-cyan-500",
+      "Elevator Entrapment": "bg-cyan-500/10 text-cyan-500",
+      "Commercial Alarm": "bg-cyan-400/10 text-cyan-400",
+      "Panic Alarm": "bg-cyan-400/10 text-cyan-400",
+      "Utilities Outage": "bg-cyan-600/10 text-cyan-600",
+
+      "Assist Other Agency": "bg-indigo-500/10 text-indigo-500",
+      "Assist CMPD": "bg-indigo-500/10 text-indigo-500",
+      Escort: "bg-indigo-400/10 text-indigo-400",
+      "Serving Papers": "bg-indigo-400/10 text-indigo-400",
+      "911 Hang Up": "bg-indigo-300/10 text-indigo-300",
+
+      "Verbal Confrontation": "bg-pink-500/10 text-pink-500",
+      Harassment: "bg-pink-500/10 text-pink-500",
+      Assault: "bg-pink-600/10 text-pink-600",
+      "Indecent Exposure": "bg-pink-400/10 text-pink-400",
+
+      "Drug Related": "bg-rose-500/10 text-rose-500",
+      Drug: "bg-rose-500/10 text-rose-500",
+      "Missing Person": "bg-rose-400/10 text-rose-400",
+      "Animal Control": "bg-rose-300/10 text-rose-300",
+      Noise: "bg-rose-300/10 text-rose-300",
     };
 
     return typeToColor[type] || "bg-gray-500/10 text-gray-500";
