@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { CampusMap } from "@/components/map/campus-map";
 import Header from "@/components/dashboard/header";
+import Footer from "@/components/dashboard/footer";
 
 export default function Home() {
   return (
@@ -23,17 +24,29 @@ export default function Home() {
 
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Recent Incidents</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-[#ff4b66]">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff4b66] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ff4b66]"></span>
+                </span>
+                Live Incidents
+              </CardTitle>
               <CardDescription>Latest reported events</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4 max-h-[540px] overflow-y-auto pr-2">
+              <div className="space-y-4 max-h-[580px] overflow-y-auto pr-2">
                 <div className="pb-4 border-b border-border">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium">Theft Report</h3>
                       <p className="text-sm text-muted-foreground">
                         Student Union
+                      </p>
+                      <p className="pt-2 pb-2 text-sm text-muted-foreground">
+                        A student reported a theft of personal belongings from
+                        the Student Union. The incident occurred around 2:00 PM
+                        today. Please be vigilant and report any suspicious
+                        activity.
                       </p>
                     </div>
                     <div className="bg-yellow-500/10 text-yellow-500 text-xs px-2 py-1 rounded-full">
@@ -52,6 +65,10 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground">
                         East Deck 1
                       </p>
+                      <p className="pt-2 pb-2 text-sm text-muted-foreground">
+                        A minor traffic accident occurred in East Deck 1. No
+                        injuries reported. Please drive carefully in the area.
+                      </p>
                     </div>
                     <div className="bg-orange-500/10 text-orange-500 text-xs px-2 py-1 rounded-full">
                       Accident
@@ -69,6 +86,10 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground">
                         Fretwell Building
                       </p>
+                      <p className="pt-2 pb-2 text-sm text-muted-foreground">
+                        A report of suspicious activity was made near the
+                        Fretwell Building. Campus security is investigating.
+                      </p>
                     </div>
                     <div className="bg-blue-500/10 text-blue-500 text-xs px-2 py-1 rounded-full">
                       Report
@@ -85,6 +106,10 @@ export default function Home() {
                       <h3 className="font-medium">Vandalism</h3>
                       <p className="text-sm text-muted-foreground">
                         South Village Deck
+                      </p>
+                      <p className="pt-2 pb-2 text-sm text-muted-foreground">
+                        Vandalism reported in South Village Deck. Please report
+                        any information to campus security.
                       </p>
                     </div>
                     <div className="bg-red-500/10 text-red-500 text-xs px-2 py-1 rounded-full">
@@ -117,6 +142,7 @@ export default function Home() {
           </Card>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

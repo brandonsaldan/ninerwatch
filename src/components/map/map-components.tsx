@@ -5,14 +5,87 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 
-const icon = L.icon({
-  iconUrl: "/marker-icon.png",
-  shadowUrl: "/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+const incidentEmojis: Record<string, string> = {
+  Investigate: "🔍",
+  "Suspicious Person": "👤",
+  "Accident/Property": "💥",
+  Larceny: "💰",
+  "Welfare Check": "🏥",
+  "Injured/Ill Subject": "🤕",
+  "Serving Papers": "📄",
+  "Suspicious Vehicle": "🚗",
+  "Follow Up": "📝",
+  "Assist Other Agency": "🤝",
+  "Hit and Run": "🚙",
+  "Elevator Call": "🛗",
+  "Commercial Alarm": "🚨",
+  Harassment: "😠",
+  "Disabled Vehicle": "🚘",
+  Escort: "👮",
+  "Damage to Property": "🏚️",
+  "Lost or Stolen": "🔎",
+  "Hit and Run/Property": "💥",
+  "Loitering/Trespassing": "⛔",
+  "Vehicle Accident": "🚗",
+  "Drug Related": "💊",
+  Loitering: "🚷",
+  "Verbal Confrontation": "🗣️",
+  Noise: "📢",
+  "Panic Alarm": "🆘",
+  "Parking Violation": "🅿️",
+  "Injured Subject": "🤕",
+  "911 Hang Up": "📞",
+  "Intoxicated Person": "🍺",
+  "Missing Person": "❓",
+  BOLO: "👁️",
+  "Disabled Elevator": "🛗",
+  "Animal Control": "🐕",
+  "Utilities Outage": "💡",
+  "Vehicle Lockout": "🔑",
+  "Elevator Entrapment": "⚠️",
+  "Traffic Stop": "🛑",
+  Suicide: "💔",
+  "Suicide Ideation": "💭",
+  Fraud: "💳",
+  "Illegal Parking": "🚫",
+  "Indecent Exposure": "🙈",
+  Crash: "💥",
+  Assault: "👊",
+  "Assist CMPD": "🚔",
+  Theft: "💰",
+  Accident: "💥",
+  Report: "📋",
+  Vandalism: "🔨",
+  "Lost Item": "🔎",
+
+  Default: "❗",
+};
+
+const createCustomIcon = (type: string) => {
+  const emoji = incidentEmojis[type] || incidentEmojis.Default;
+
+  return L.divIcon({
+    className: "custom-div-icon",
+    html: `
+      <div style="
+        background-color: rgba(50, 50, 50, 0.7); 
+        border: 2px solid #666; 
+        width: 30px; 
+        height: 30px; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 16px;"
+      >
+        ${emoji}
+      </div>
+    `,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -15],
+  });
+};
 
 const incidents = [
   {
@@ -37,10 +110,28 @@ const incidents = [
     id: 3,
     title: "Suspicious Activity",
     location: "Fretwell Building",
-    type: "Report",
+    type: "Suspicious Person",
     lat: 35.306,
     lng: -80.735,
     time: "Yesterday, 8:45 PM",
+  },
+  {
+    id: 4,
+    title: "Vandalism",
+    location: "South Village Deck",
+    type: "Damage to Property",
+    lat: 35.305,
+    lng: -80.736,
+    time: "Yesterday, 4:15 PM",
+  },
+  {
+    id: 5,
+    title: "Lost Property",
+    location: "Atkins Library",
+    type: "Lost or Stolen",
+    lat: 35.309,
+    lng: -80.732,
+    time: "2 days ago, 3:30 PM",
   },
 ];
 
@@ -66,7 +157,7 @@ export default function MapComponents() {
         <Marker
           key={incident.id}
           position={[incident.lat, incident.lng]}
-          icon={icon}
+          icon={createCustomIcon(incident.type)}
         >
           <Popup>
             <div className="p-1">
@@ -76,7 +167,8 @@ export default function MapComponents() {
               </p>
               <p className="text-xs mt-1">{incident.time}</p>
               <div className="mt-1">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/20">
+                  {incidentEmojis[incident.type] || incidentEmojis.Default}{" "}
                   {incident.type}
                 </span>
               </div>
