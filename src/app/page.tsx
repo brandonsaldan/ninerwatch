@@ -95,7 +95,7 @@ export default function Home() {
                           <p className="text-sm text-muted-foreground">
                             {incident.incident_location}
                           </p>
-                          <p className="pt-2 pb-2 text-sm text-muted-foreground">
+                          <p className="mt-2 mb-2 text-sm text-muted-foreground line-clamp-2 overflow-hidden">
                             {incident.incident_description ||
                               "No description available."}
                           </p>
