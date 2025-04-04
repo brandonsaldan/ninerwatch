@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { useIncidents } from "@/context/incidents-context";
 import { formatDistanceToNow } from "date-fns";
+import { Incident } from "@/lib/supabase";
 
 const incidentEmojis: Record<string, string> = {
   Investigate: "🔍",
@@ -112,9 +113,38 @@ export default function MapComponents() {
     );
   }
 
-  const mappableIncidents = incidents
+  const incidentsWithCoords = incidents
     .filter((incident) => incident.lat && incident.lng)
-    .slice(0, 50);
+    .slice(0, 25);
+
+  const locationGroups: Record<string, Incident[]> = {};
+
+  incidentsWithCoords.forEach((incident) => {
+    const key = `${incident.lat!.toFixed(5)},${incident.lng!.toFixed(5)}`;
+
+    if (!locationGroups[key]) {
+      locationGroups[key] = [];
+    }
+
+    locationGroups[key].push(incident);
+  });
+
+  const adjustMarkerPosition = (
+    incident: Incident,
+    index: number,
+    total: number
+  ) => {
+    if (total <= 1) {
+      return [incident.lat!, incident.lng!];
+    }
+
+    const OFFSET_RADIUS = 0.0004;
+    const angle = (index / total) * 2 * Math.PI;
+    const offsetLat = incident.lat! + OFFSET_RADIUS * Math.cos(angle);
+    const offsetLng = incident.lng! + OFFSET_RADIUS * Math.sin(angle);
+
+    return [offsetLat, offsetLng];
+  };
 
   return (
     <MapContainer
@@ -131,37 +161,49 @@ export default function MapComponents() {
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
 
-      {mappableIncidents.map((incident) => (
-        <Marker
-          key={incident.id}
-          position={[incident.lat!, incident.lng!]}
-          icon={createCustomIcon(incident.incident_type)}
-        >
-          <Popup>
-            <div className="p-1">
-              <h3 className="font-medium text-sm">{incident.incident_type}</h3>
-              <p className="text-xs text-muted-foreground">
-                {incident.incident_location}
-              </p>
-              <p className="text-xs mt-1">
-                {formatDate(incident.time_reported)}
-              </p>
-              {incident.incident_description && (
-                <p className="text-xs mt-1 max-w-64 truncate">
-                  {incident.incident_description}
-                </p>
-              )}
-              <div className="mt-1">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/20">
-                  {incidentEmojis[incident.incident_type] ||
-                    incidentEmojis.Default}{" "}
-                  {incident.disposition || "Open"}
-                </span>
-              </div>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {Object.entries(locationGroups).map(([_, groupedIncidents]) =>
+        groupedIncidents.map((incident, index) => {
+          const [adjustedLat, adjustedLng] = adjustMarkerPosition(
+            incident,
+            index,
+            groupedIncidents.length
+          );
+
+          return (
+            <Marker
+              key={incident.id}
+              position={[adjustedLat, adjustedLng]}
+              icon={createCustomIcon(incident.incident_type)}
+            >
+              <Popup>
+                <div className="p-1">
+                  <h3 className="font-medium text-sm">
+                    {incident.incident_type}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {incident.incident_location}
+                  </p>
+                  <p className="text-xs mt-1">
+                    {formatDate(incident.time_reported)}
+                  </p>
+                  {incident.incident_description && (
+                    <p className="text-xs mt-1 max-w-64 truncate">
+                      {incident.incident_description}
+                    </p>
+                  )}
+                  <div className="mt-1">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/20">
+                      {incidentEmojis[incident.incident_type] ||
+                        incidentEmojis.Default}{" "}
+                      {incident.disposition || "Open"}
+                    </span>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })
+      )}
     </MapContainer>
   );
 }

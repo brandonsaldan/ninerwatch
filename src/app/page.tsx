@@ -138,10 +138,18 @@ export default function Home() {
                           <p className="text-sm text-muted-foreground">
                             {incident.incident_location}
                           </p>
-                          <p className="mt-2 mb-2 text-sm text-muted-foreground line-clamp-2 overflow-hidden">
-                            {incident.incident_description ||
-                              "No description available."}
-                          </p>
+                          <div className="relative group">
+                            <p className="mt-2 mb-2 text-sm text-muted-foreground line-clamp-2 overflow-hidden">
+                              {incident.incident_description ||
+                                "No description available."}
+                            </p>
+                            {incident.incident_description &&
+                              incident.incident_description.length > 100 && (
+                                <div className="absolute z-10 invisible group-hover:visible bg-popover text-popover-foreground p-2 rounded-md shadow-md w-72 text-xs mt-1">
+                                  {incident.incident_description}
+                                </div>
+                              )}
+                          </div>
                         </div>
                         <div
                           className={`${getBadgeColor(

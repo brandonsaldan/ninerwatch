@@ -53,8 +53,6 @@ export const validateSupabaseConnection = async (): Promise<boolean> => {
       console.error("Failed to connect to Supabase:", error.message);
       return false;
     }
-
-    console.log("Successfully connected to Supabase");
     return true;
   } catch (err) {
     console.error("Error validating Supabase connection:", err);

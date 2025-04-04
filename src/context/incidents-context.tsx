@@ -121,6 +121,11 @@ function getCoordinates(location: string): { lat: number; lng: number } {
   return DEFAULT_LOCATION;
 }
 
+type IncidentTypeCount = {
+  incident_type: string;
+  count: number;
+};
+
 type IncidentsContextType = {
   incidents: Incident[];
   loading: boolean;
@@ -128,7 +133,7 @@ type IncidentsContextType = {
   refreshIncidents: () => Promise<void>;
   getRecentIncidents: (limit?: number) => Incident[];
   getIncidentsByType: (type: string) => Incident[];
-  incidentTypes: { incident_type: string; count: number }[];
+  incidentTypes: IncidentTypeCount[];
 };
 
 const IncidentsContext = createContext<IncidentsContextType>({
@@ -145,9 +150,7 @@ export const useIncidents = () => useContext(IncidentsContext);
 
 export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [incidentTypes, setIncidentTypes] = useState<
-    { incident_type: string; count: number }[]
-  >([]);
+  const [incidentTypes, setIncidentTypes] = useState<IncidentTypeCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -165,10 +168,23 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
         throw incidentsError;
       }
 
-      const incidentsWithCoords = data.map((incident) => ({
-        ...incident,
-        ...getCoordinates(incident.incident_location),
-      }));
+      if (!data) {
+        throw new Error("No data returned from Supabase");
+      }
+
+      const sortedIncidents = [...data].sort((a, b) => {
+        const dateA = new Date(a.time_reported).getTime();
+        const dateB = new Date(b.time_reported).getTime();
+        return dateB - dateA;
+      });
+
+      const incidentsWithCoords = sortedIncidents.map((incident) => {
+        const coords = getCoordinates(incident.incident_location);
+        return {
+          ...incident,
+          ...coords,
+        };
+      });
 
       setIncidents(incidentsWithCoords);
 
@@ -181,13 +197,17 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
         throw typesError;
       }
 
+      if (!typesData) {
+        throw new Error("No types data returned from Supabase");
+      }
+
       const typeCounts: Record<string, number> = {};
       typesData.forEach((item) => {
         typeCounts[item.incident_type] =
           (typeCounts[item.incident_type] || 0) + 1;
       });
 
-      const typeCountArray = Object.entries(typeCounts)
+      const typeCountArray: IncidentTypeCount[] = Object.entries(typeCounts)
         .map(([incident_type, count]) => ({
           incident_type,
           count,
