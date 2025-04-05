@@ -77,7 +77,7 @@ export const CommentComponent: React.FC<CommentProps> = ({
                 }}
                 className={`flex items-center gap-1 ${
                   currentVote === 1
-                    ? theme.accentColor
+                    ? "text-green-400"
                     : "text-muted-foreground hover:" + theme.accentColor
                 } transition-colors`}
               >
@@ -113,7 +113,7 @@ export const CommentComponent: React.FC<CommentProps> = ({
                 }}
                 className={`flex items-center gap-1 ${
                   currentVote === -1
-                    ? theme.accentColor
+                    ? "text-red-400"
                     : "text-muted-foreground hover:" + theme.accentColor
                 } transition-colors`}
               >
@@ -251,7 +251,7 @@ export const CommentComponent: React.FC<CommentProps> = ({
                                   }}
                                   className={`flex items-center gap-1 ${
                                     replyVote === 1
-                                      ? theme.accentColor
+                                      ? "text-green-400"
                                       : "text-muted-foreground hover:" +
                                         theme.accentColor
                                   } transition-colors`}
@@ -288,7 +288,7 @@ export const CommentComponent: React.FC<CommentProps> = ({
                                   }}
                                   className={`flex items-center gap-1 ${
                                     replyVote === -1
-                                      ? theme.accentColor
+                                      ? "text-red-400"
                                       : "text-muted-foreground hover:" +
                                         theme.accentColor
                                   } transition-colors`}
