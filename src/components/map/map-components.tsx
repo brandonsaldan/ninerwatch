@@ -7,6 +7,7 @@ import "./map.css";
 import { useIncidents } from "@/context/incidents-context";
 import { formatDistanceToNow } from "date-fns";
 import { Incident } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 const incidentEmojis: Record<string, string> = {
   Investigate: "🔍",
@@ -158,6 +159,7 @@ const getBadgeColor = (type: string) => {
 };
 
 export default function MapComponents({ incidentId }: { incidentId?: string }) {
+  const router = useRouter();
   const { incidents, loading, error } = useIncidents();
   const center = [35.3075, -80.7331];
 
@@ -246,35 +248,52 @@ export default function MapComponents({ incidentId }: { incidentId?: string }) {
               icon={createCustomIcon(incident.incident_type)}
             >
               <Popup className="custom-popup">
-                <div className="rounded-xl bg-black/60 border border-border shadow-lg p-4 max-w-xs space-y-2 backdrop-blur-md bg-opacity-90">
-                  <div className="flex justify-between items-start gap-2">
-                    <span
-                      className={`${getBadgeColor(
-                        incident.incident_type
-                      )} text-sm px-2 py-1 rounded-full whitespace-nowrap`}
-                    >
-                      {incidentEmojis[incident.incident_type] ||
-                        incidentEmojis.Default}{" "}
-                      {incident.incident_type}
-                    </span>
-                  </div>
-
-                  <div className="text-sm text-white text-muted-foreground">
-                    {incident.incident_location}
-                  </div>
-
-                  {incident.incident_description && (
-                    <div className="text-sm text-muted-foreground line-clamp-2 overflow-hidden">
-                      {incident.incident_description}
+                <div className="rounded-xl bg-black/60 border border-border shadow-lg p-4 max-w-xs backdrop-blur-md bg-opacity-90">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-2">
+                      <span
+                        className={`${getBadgeColor(
+                          incident.incident_type
+                        )} text-sm px-2 py-1 rounded-full whitespace-nowrap`}
+                      >
+                        {incidentEmojis[incident.incident_type] ||
+                          incidentEmojis.Default}{" "}
+                        {incident.incident_type}
+                      </span>
                     </div>
-                  )}
 
-                  <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground border-t border-border">
-                    <div>{formatDate(incident.time_reported)}</div>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/50">
-                      {incident.disposition || "Open"}
-                    </span>
+                    <div className="text-sm text-white text-muted-foreground">
+                      {incident.incident_location}
+                    </div>
+
+                    {incident.incident_description && (
+                      <div className="text-sm text-muted-foreground line-clamp-2 overflow-hidden">
+                        {incident.incident_description}
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground border-t border-border">
+                      <div>{formatDate(incident.time_reported)}</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-secondary/50">
+                        {incident.disposition || "Open"}
+                      </span>
+                    </div>
                   </div>
+
+                  <button
+                    className="block w-full mt-3 text-center py-1.5 px-3 rounded bg-secondary/60 hover:bg-secondary/80 text-white text-xs font-medium transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(
+                        `/incident/${incident.report_number.replace(
+                          /\//g,
+                          "-"
+                        )}`
+                      );
+                    }}
+                  >
+                    View Incident Details →
+                  </button>
                 </div>
               </Popup>
             </Marker>
