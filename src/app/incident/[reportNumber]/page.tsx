@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
 import { supabase, Incident } from "@/lib/supabase";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { CampusMap } from "@/components/map/campus-map";
+import IncidentSkeleton from "@/components/ui/incident-skeleton";
 
 export default function IncidentPage() {
   const router = useRouter();
@@ -506,24 +508,23 @@ export default function IncidentPage() {
 
       <main className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Back to Dashboard
+          <Link href="/" className="flex items-center gap-2">
+            <Button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 19l-7-7 7-7"></path>
+              </svg>
+              Back
+            </Button>
           </Link>
 
           <div className="flex gap-2">
@@ -572,24 +573,7 @@ export default function IncidentPage() {
         </div>
 
         {loading ? (
-          <div className="py-20 text-center">
-            <div className="inline-block animate-pulse bg-secondary rounded-full h-20 w-20 flex items-center justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-              </svg>
-            </div>
-            <p className="text-muted-foreground">Loading incident details...</p>
-          </div>
+          <IncidentSkeleton />
         ) : error ? (
           <div className="py-20 text-center">
             <div className="inline-block bg-red-500/10 rounded-full h-20 w-20 flex items-center justify-center mb-4">
