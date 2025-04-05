@@ -1,10 +1,11 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { Incident } from "@/lib/supabase";
+import { formatDistanceToNow } from "date-fns";
 
 const incidentEmojis: Record<string, string> = {
   Investigate: "🔍",
@@ -79,7 +80,17 @@ const createCustomIcon = (type: string) => {
     `,
     iconSize: [40, 40],
     iconAnchor: [20, 20],
+    popupAnchor: [-70, -20],
   });
+};
+
+const formatDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  } catch {
+    return "Unknown time";
+  }
 };
 
 export default function IncidentDetailMapComponent({
@@ -91,6 +102,56 @@ export default function IncidentDetailMapComponent({
     incident.lat && incident.lng
       ? [incident.lat, incident.lng]
       : [35.3075, -80.7331];
+
+  type TimelineEvent = {
+    title: string;
+    time: string;
+    icon: string;
+    backgroundColor: string;
+    borderColor: string;
+    content?: string;
+  };
+
+  const timelineEvents: TimelineEvent[] = [
+    {
+      title: "Reported",
+      time: incident.time_reported,
+      icon: "📝",
+      backgroundColor: "rgba(239, 68, 68, 0.3)",
+      borderColor: "rgba(239, 68, 68, 0.4)",
+    },
+  ];
+
+  if (incident.time_of_occurrence) {
+    timelineEvents.push({
+      title: "Occurred",
+      time: incident.time_of_occurrence,
+      icon: "⚠️",
+      backgroundColor: "rgba(245, 158, 11, 0.3)",
+      borderColor: "rgba(245, 158, 11, 0.4)",
+    });
+  }
+
+  if (incident.time_secured) {
+    timelineEvents.push({
+      title: "Secured",
+      time: incident.time_secured,
+      icon: "🔒",
+      backgroundColor: "rgba(16, 185, 129, 0.3)",
+      borderColor: "rgba(16, 185, 129, 0.4)",
+    });
+  }
+
+  if (incident.disposition) {
+    timelineEvents.push({
+      title: "Status",
+      time: incident.time_reported,
+      content: incident.disposition,
+      icon: "📋",
+      backgroundColor: "rgba(99, 102, 241, 0.3)",
+      borderColor: "rgba(99, 102, 241, 0.4)",
+    });
+  }
 
   return (
     <MapContainer
@@ -120,7 +181,82 @@ export default function IncidentDetailMapComponent({
       <Marker
         position={coords as [number, number]}
         icon={createCustomIcon(incident.incident_type)}
-      />
+      >
+        <Popup className="custom-popup">
+          <div
+            className="rounded-xl bg-black/80 border border-border shadow-lg p-4 backdrop-blur-md"
+            style={{ width: "435px", maxWidth: "90vw" }}
+          >
+            <h3 className="text-white font-medium mb-3 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-[#ff4b66]"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Incident Timeline
+            </h3>
+
+            <div className="relative">
+              <div
+                className="absolute h-0.5 bg-gray-700"
+                style={{
+                  left: timelineEvents.length > 1 ? "40px" : "0",
+                  right: timelineEvents.length > 1 ? "40px" : "0",
+                  top: "14px",
+                }}
+              ></div>
+
+              <div className="flex justify-between items-start relative z-10">
+                {timelineEvents.map((event, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col items-center text-center"
+                    style={{ width: `${100 / timelineEvents.length}%` }}
+                  >
+                    <div
+                      className="absolute h-7 w-7 rounded-full"
+                      style={{
+                        backgroundColor: "#000000",
+                        top: "-1px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                      }}
+                    ></div>
+
+                    <div
+                      className="h-7 w-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 z-10 relative"
+                      style={{
+                        backgroundColor: event.backgroundColor,
+                        border: `2px solid ${event.borderColor}`,
+                      }}
+                    >
+                      {event.icon}
+                    </div>
+                    <div className="mt-2 px-1">
+                      <div className="text-sm font-medium text-white">
+                        {event.title}
+                      </div>
+                      <div className="text-xs text-gray-400 break-words">
+                        {event.content || formatDate(event.time)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Popup>
+      </Marker>
     </MapContainer>
   );
 }
