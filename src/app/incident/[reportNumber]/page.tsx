@@ -32,6 +32,7 @@ export default function IncidentPage() {
   );
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
+  const [userVotes, setUserVotes] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchIncidentData = async () => {
@@ -101,6 +102,32 @@ export default function IncidentPage() {
 
     fetchIncidentData();
   }, [originalReportNumber]);
+
+  useEffect(() => {
+    if (incident && comments.length > 0) {
+      const loadedVotes: Record<string, number> = {};
+
+      comments.forEach((comment) => {
+        const storageKey = `vote_${incident.id}_${comment.id}`;
+        const savedVote = localStorage.getItem(storageKey);
+        if (savedVote) {
+          loadedVotes[comment.id] = parseInt(savedVote);
+        }
+
+        if (comment.replies) {
+          comment.replies.forEach((reply) => {
+            const replyStorageKey = `vote_${incident.id}_${reply.id}`;
+            const replySavedVote = localStorage.getItem(replyStorageKey);
+            if (replySavedVote) {
+              loadedVotes[reply.id] = parseInt(replySavedVote);
+            }
+          });
+        }
+      });
+
+      setUserVotes(loadedVotes);
+    }
+  }, [incident, comments]);
 
   const formatDate = (dateString: string) => {
     try {
@@ -525,8 +552,40 @@ export default function IncidentPage() {
     }
   };
 
-  const handleVote = async (id: string, increment: number) => {
+  const handleVote = async (
+    id: string,
+    increment: number,
+    previousVote: number
+  ) => {
     try {
+      const updatedUserVotes = {
+        ...userVotes,
+        [id]:
+          previousVote === 0
+            ? increment > 0
+              ? 1
+              : -1
+            : previousVote === 1
+            ? 0
+            : previousVote === -1
+            ? 0
+            : 0,
+      };
+
+      if (updatedUserVotes[id] === 0) {
+        delete updatedUserVotes[id];
+      }
+
+      const storageKey = `vote_${incident?.id}_${id}`;
+
+      if (updatedUserVotes[id]) {
+        localStorage.setItem(storageKey, updatedUserVotes[id].toString());
+      } else {
+        localStorage.removeItem(storageKey);
+      }
+
+      setUserVotes(updatedUserVotes);
+
       const { error } = await updateCommentVotes(id, increment);
 
       if (error) {
@@ -911,6 +970,7 @@ export default function IncidentPage() {
                             onVote={handleVote}
                             onReply={handleReply}
                             theme={theme}
+                            userVotes={userVotes}
                           />
                         ))
                       )}
