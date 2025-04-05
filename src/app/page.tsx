@@ -12,6 +12,7 @@ import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
 import { useIncidents } from "@/context/incidents-context";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
 
 export default function Home() {
   const { incidents, loading, error } = useIncidents();
@@ -132,9 +133,15 @@ export default function Home() {
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-medium">
+                          <Link
+                            href={`/incident/${incident.report_number.replace(
+                              /\//g,
+                              "-"
+                            )}`}
+                            className="font-medium hover:underline"
+                          >
                             {incident.incident_type}
-                          </h3>
+                          </Link>
                           <p className="text-sm text-muted-foreground">
                             {incident.incident_location}
                           </p>

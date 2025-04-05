@@ -8,7 +8,7 @@ const MapComponentsWithNoSSR = dynamic(() => import("./map-components"), {
   ssr: false,
 });
 
-export function CampusMap() {
+export function CampusMap({ incidentId }: { incidentId?: string }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -23,5 +23,5 @@ export function CampusMap() {
     );
   }
 
-  return <MapComponentsWithNoSSR />;
+  return <MapComponentsWithNoSSR incidentId={incidentId} />;
 }

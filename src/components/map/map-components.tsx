@@ -157,7 +157,7 @@ const getBadgeColor = (type: string) => {
   return typeToColor[type] || "bg-gray-500/10 text-gray-500";
 };
 
-export default function MapComponents() {
+export default function MapComponents({ incidentId }: { incidentId?: string }) {
   const { incidents, loading, error } = useIncidents();
   const center = [35.3075, -80.7331];
 
@@ -177,9 +177,15 @@ export default function MapComponents() {
     );
   }
 
-  const incidentsWithCoords = incidents
+  let incidentsWithCoords = incidents
     .filter((incident) => incident.lat && incident.lng)
     .slice(0, 25);
+
+  if (incidentId) {
+    incidentsWithCoords = incidentsWithCoords.filter(
+      (incident) => incident.id === incidentId
+    );
+  }
 
   const locationGroups: Record<string, Incident[]> = {};
 
