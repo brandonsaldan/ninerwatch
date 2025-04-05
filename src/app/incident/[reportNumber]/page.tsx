@@ -641,7 +641,7 @@ export default function IncidentPage() {
                       ? `border-b-2 border-${theme.color.split("-")[1]} ${
                           theme.accentColor
                         }`
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
                   }`}
                 >
                   <svg
@@ -669,7 +669,7 @@ export default function IncidentPage() {
                       ? `border-b-2 border-${theme.color.split("-")[1]} ${
                           theme.accentColor
                         }`
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
                   }`}
                 >
                   <svg
