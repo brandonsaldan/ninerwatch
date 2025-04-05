@@ -32,7 +32,7 @@
   height: 20px !important;
   font-size: 18px !important;
   z-index: 10;
-  transition: all 0.2s ease-in-out;
+  transition: opacity 0.2s ease;
 }
 
 .leaflet-popup-close-button:hover {
@@ -43,7 +43,7 @@
 
 .leaflet-fade-anim .leaflet-popup {
   opacity: 0;
-  transition: opacity 0.25s linear;
+  transition: opacity 0.2s ease;
 }
 
 .leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
@@ -53,4 +53,19 @@
 .leaflet-popup-content > p {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+}
+
+.custom-popup .rounded-xl {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

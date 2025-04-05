@@ -80,7 +80,7 @@ const createCustomIcon = (type: string) => {
     `,
     iconSize: [30, 30],
     iconAnchor: [15, 15],
-    popupAnchor: [0, -15],
+    popupAnchor: [0, -10],
   });
 };
 
