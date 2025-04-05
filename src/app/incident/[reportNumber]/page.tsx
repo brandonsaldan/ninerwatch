@@ -9,7 +9,7 @@ import Footer from "@/components/dashboard/footer";
 import { supabase, Incident } from "@/lib/supabase";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { CampusMap } from "@/components/map/campus-map";
+import { IncidentDetailMap } from "@/components/map/incident-detail-map";
 import IncidentSkeleton from "@/components/ui/incident-skeleton";
 
 export default function IncidentPage() {
@@ -877,7 +877,7 @@ export default function IncidentPage() {
                 <div className="lg:col-span-1 space-y-6">
                   <Card className="overflow-hidden">
                     <div className="h-[250px] w-full relative">
-                      <CampusMap incidentId={incident.id} />
+                      <IncidentDetailMap incident={incident} />
                       <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md shadow-lg bg-opacity-90 text-white px-3 py-1.5 rounded-lg text-sm">
                         {incident.incident_location}
                       </div>
@@ -1030,7 +1030,7 @@ export default function IncidentPage() {
                 <div className="lg:col-span-2 space-y-6">
                   <Card className="overflow-hidden">
                     <div className="h-[400px] w-full relative">
-                      <CampusMap incidentId={incident.id} />
+                      <IncidentDetailMap incident={incident} />
                       <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md shadow-lg bg-opacity-90 text-white px-3 py-1.5 rounded-lg text-sm">
                         {incident.incident_location}
                       </div>
