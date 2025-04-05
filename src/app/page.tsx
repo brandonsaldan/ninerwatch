@@ -133,15 +133,9 @@ export default function Home() {
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <Link
-                            href={`/incident/${incident.report_number.replace(
-                              /\//g,
-                              "-"
-                            )}`}
-                            className="font-medium hover:underline"
-                          >
+                          <p className="font-medium">
                             {incident.incident_type}
-                          </Link>
+                          </p>
                           <p className="text-sm text-muted-foreground">
                             {incident.incident_location}
                           </p>
@@ -169,6 +163,21 @@ export default function Home() {
                       <p className="text-xs text-muted-foreground mt-1">
                         {formatDate(incident.time_reported)}
                       </p>
+                      <Link
+                        href={`/incident/${incident.report_number.replace(
+                          /\//g,
+                          "-"
+                        )}`}
+                        passHref
+                        legacyBehavior
+                      >
+                        <a
+                          className="block mt-4 text-center py-2 px-3 rounded bg-secondary/60 hover:bg-secondary/80 text-white text-xs font-medium transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View Incident Details →
+                        </a>
+                      </Link>
                     </div>
                   ))}
 
