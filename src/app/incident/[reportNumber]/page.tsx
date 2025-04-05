@@ -558,35 +558,38 @@ export default function IncidentPage() {
     previousVote: number
   ) => {
     try {
-      const updatedUserVotes = {
-        ...userVotes,
-        [id]:
-          previousVote === 0
-            ? increment > 0
-              ? 1
-              : -1
-            : previousVote === 1
-            ? 0
-            : previousVote === -1
-            ? 0
-            : 0,
-      };
+      let newVoteState = 0;
 
-      if (updatedUserVotes[id] === 0) {
+      if (previousVote === 0) {
+        newVoteState = increment > 0 ? 1 : -1;
+      } else if (previousVote === 1 && increment < 0) {
+        newVoteState = 0;
+      } else if (previousVote === -1 && increment > 0) {
+        newVoteState = 0;
+      } else {
+        newVoteState = increment > 0 ? 1 : -1;
+      }
+
+      const voteChange = newVoteState - previousVote;
+      const updatedUserVotes = { ...userVotes };
+
+      if (newVoteState === 0) {
         delete updatedUserVotes[id];
+      } else {
+        updatedUserVotes[id] = newVoteState;
       }
 
       const storageKey = `vote_${incident?.id}_${id}`;
 
-      if (updatedUserVotes[id]) {
-        localStorage.setItem(storageKey, updatedUserVotes[id].toString());
+      if (newVoteState !== 0) {
+        localStorage.setItem(storageKey, newVoteState.toString());
       } else {
         localStorage.removeItem(storageKey);
       }
 
       setUserVotes(updatedUserVotes);
 
-      const { error } = await updateCommentVotes(id, increment);
+      const { error } = await updateCommentVotes(id, voteChange);
 
       if (error) {
         console.error("Error updating votes:", error);
@@ -599,7 +602,7 @@ export default function IncidentPage() {
       updatedComments = updatedComments.map((comment) => {
         if (comment.id === id) {
           foundInTopLevel = true;
-          return { ...comment, votes: comment.votes + increment };
+          return { ...comment, votes: comment.votes + voteChange };
         }
         return comment;
       });
@@ -609,7 +612,7 @@ export default function IncidentPage() {
           if (comment.replies) {
             const updatedReplies = comment.replies.map((reply) => {
               if (reply.id === id) {
-                return { ...reply, votes: reply.votes + increment };
+                return { ...reply, votes: reply.votes + voteChange };
               }
               return reply;
             });

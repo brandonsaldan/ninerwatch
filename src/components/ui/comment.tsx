@@ -70,9 +70,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
               <button
                 onClick={() => {
                   if (currentVote === 1) {
-                    onVote(comment.id, -1, currentVote);
+                    onVote(comment.id, -1, 1);
                   } else {
-                    onVote(comment.id, currentVote === -1 ? 2 : 1, currentVote);
+                    onVote(comment.id, 1, currentVote);
                   }
                 }}
                 className={`flex items-center gap-1 ${
@@ -102,13 +102,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
               <button
                 onClick={() => {
                   if (currentVote === -1) {
-                    onVote(comment.id, 1, currentVote);
+                    onVote(comment.id, 1, -1);
                   } else {
-                    onVote(
-                      comment.id,
-                      currentVote === 1 ? -2 : -1,
-                      currentVote
-                    );
+                    onVote(comment.id, -1, currentVote);
                   }
                 }}
                 className={`flex items-center gap-1 ${
@@ -240,13 +236,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
                                 <button
                                   onClick={() => {
                                     if (replyVote === 1) {
-                                      onVote(reply.id, -1, replyVote);
+                                      onVote(reply.id, -1, 1);
                                     } else {
-                                      onVote(
-                                        reply.id,
-                                        replyVote === -1 ? 2 : 1,
-                                        replyVote
-                                      );
+                                      onVote(reply.id, 1, replyVote);
                                     }
                                   }}
                                   className={`flex items-center gap-1 ${
@@ -277,13 +269,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
                                 <button
                                   onClick={() => {
                                     if (replyVote === -1) {
-                                      onVote(reply.id, 1, replyVote);
+                                      onVote(reply.id, 1, -1);
                                     } else {
-                                      onVote(
-                                        reply.id,
-                                        replyVote === 1 ? -2 : -1,
-                                        replyVote
-                                      );
+                                      onVote(reply.id, -1, replyVote);
                                     }
                                   }}
                                   className={`flex items-center gap-1 ${
