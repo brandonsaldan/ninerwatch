@@ -240,7 +240,7 @@ export default function MapComponents() {
               icon={createCustomIcon(incident.incident_type)}
             >
               <Popup className="custom-popup">
-                <div className="rounded-md bg-card border border-border shadow-lg p-4 max-w-xs space-y-2">
+                <div className="rounded-xl bg-black/60 border border-border shadow-lg p-4 max-w-xs space-y-2 backdrop-blur-md bg-opacity-90">
                   <div className="flex justify-between items-start gap-2">
                     <span
                       className={`${getBadgeColor(
