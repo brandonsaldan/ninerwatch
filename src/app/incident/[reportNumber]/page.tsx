@@ -628,7 +628,11 @@ export default function IncidentPage() {
     }
   };
 
-  const handleReply = async (parentId: string, replyText: string) => {
+  const handleReply = async (
+    parentId: string,
+    replyToId: string,
+    replyText: string
+  ) => {
     if (!replyText.trim() || !incident) return;
 
     const colors = [
@@ -645,6 +649,7 @@ export default function IncidentPage() {
       const { error } = await addReply(
         incident.id,
         parentId,
+        replyToId,
         replyText,
         randomColor
       );
@@ -918,7 +923,7 @@ export default function IncidentPage() {
                           <div className="absolute bottom-3 right-3 flex gap-2">
                             <button
                               type="submit"
-                              className={`${theme.accentBg} text-white rounded-full px-4 py-1 text-sm font-medium hover:opacity-90 transition-colors`}
+                              className={`${theme.accentBg} text-white px-4 py-1 rounded-md font-semibold text-sm hover:opacity-90 transition-colors`}
                               disabled={!commentText.trim()}
                             >
                               Post

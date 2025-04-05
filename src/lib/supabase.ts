@@ -35,6 +35,7 @@ export type Comment = {
   id: string;
   incident_id: string;
   parent_id: string | null;
+  reply_to_id: string | null;
   comment_text: string;
   user_color: string;
   votes: number;
