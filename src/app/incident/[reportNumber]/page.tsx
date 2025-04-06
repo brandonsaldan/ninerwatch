@@ -614,6 +614,49 @@ export default function IncidentPage() {
       };
 
       setComments(updateCommentVotesRecursive([...comments]));
+
+      if (continuedThreadComment) {
+        const updateContinuedThreadVotes = (comment: Comment): Comment => {
+          if (comment.id === id) {
+            return { ...comment, votes: comment.votes + voteChange };
+          }
+
+          if (comment.replies && comment.replies.length > 0) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                updateContinuedThreadVotes(reply)
+              ),
+            };
+          }
+
+          return comment;
+        };
+
+        setContinuedThreadComment(
+          updateContinuedThreadVotes({ ...continuedThreadComment })
+        );
+      }
+
+      if (continuedThreadComment && originalThreadState) {
+        const updateVotesInOriginalState = (comments: Comment[]): Comment[] => {
+          return comments.map((c) => {
+            if (c.id === id) {
+              return { ...c, votes: c.votes + voteChange };
+            } else if (c.replies && c.replies.length > 0) {
+              return {
+                ...c,
+                replies: updateVotesInOriginalState(c.replies),
+              };
+            }
+            return c;
+          });
+        };
+
+        setOriginalThreadState(
+          updateVotesInOriginalState([...originalThreadState])
+        );
+      }
     } catch (err) {
       console.error("Error voting on comment:", err);
     }
@@ -653,8 +696,33 @@ export default function IncidentPage() {
       const { data: refreshedComments } = await getIncidentComments(
         incident.id
       );
+
       if (refreshedComments) {
         setComments(refreshedComments);
+
+        if (continuedThreadComment) {
+          const findUpdatedThreadComment = (
+            comments: Comment[]
+          ): Comment | null => {
+            for (const comment of comments) {
+              if (comment.id === continuedThreadComment.id) {
+                return comment;
+              }
+
+              if (comment.replies && comment.replies.length > 0) {
+                const found = findUpdatedThreadComment(comment.replies);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+
+          const updatedThreadComment =
+            findUpdatedThreadComment(refreshedComments);
+          if (updatedThreadComment) {
+            setContinuedThreadComment(updatedThreadComment);
+          }
+        }
       }
     } catch (err) {
       console.error("Error submitting reply:", err);
