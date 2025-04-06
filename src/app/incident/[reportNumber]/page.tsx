@@ -729,15 +729,37 @@ export default function IncidentPage() {
     }
   };
 
+  const [threadHistory, setThreadHistory] = useState<
+    {
+      comment: Comment;
+      originalState: Comment[];
+    }[]
+  >([]);
+
   const handleContinueThread = (comment: Comment) => {
-    if (!originalThreadState) {
+    if (continuedThreadComment) {
+      setThreadHistory([
+        ...threadHistory,
+        {
+          comment: continuedThreadComment,
+          originalState: originalThreadState || [],
+        },
+      ]);
+    } else if (!originalThreadState) {
       setOriginalThreadState([...comments]);
     }
+
     setContinuedThreadComment(comment);
   };
 
   const handleBackToThread = () => {
-    if (originalThreadState) {
+    if (threadHistory.length > 0) {
+      const newHistory = [...threadHistory];
+      const lastEntry = newHistory.pop();
+
+      setContinuedThreadComment(lastEntry?.comment || null);
+      setThreadHistory(newHistory);
+    } else if (originalThreadState) {
       setComments(originalThreadState);
       setContinuedThreadComment(null);
       setOriginalThreadState(null);
@@ -1068,6 +1090,7 @@ export default function IncidentPage() {
                           userVotes={userVotes}
                           isPartOfContinuedThread={true}
                           onBackToThread={handleBackToThread}
+                          onContinueThread={handleContinueThread}
                         />
                       ) : (
                         comments.map((comment) => (
