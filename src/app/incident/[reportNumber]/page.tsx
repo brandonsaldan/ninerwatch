@@ -12,6 +12,7 @@ import {
   addComment,
   addReply,
   updateCommentVotes,
+  getTotalRepliesCount,
 } from "@/lib/comments";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -659,7 +660,7 @@ export default function IncidentPage() {
     let count = comments.length;
     comments.forEach((comment) => {
       if (comment.replies) {
-        count += comment.replies.length;
+        count += getTotalRepliesCount(comment);
       }
     });
     return count;
