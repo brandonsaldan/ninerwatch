@@ -5,8 +5,8 @@ from supabase import create_client, Client
 import pdfplumber
 import os
 
-SUPABASE_URL = ""
-SUPABASE_KEY = ""
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 PDF_DIR = "pdfs_2025"
 TXT_DIR = "txt_exports"
 FAILED_EXPORT = "failed_incidents.txt"

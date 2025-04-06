@@ -1,0 +1,63 @@
+name: Process New Police Logs
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  process-logs:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdfplumber supabase requests beautifulsoup4
+
+      - name: Create directories
+        run: |
+          mkdir -p pdfs_2025
+          mkdir -p txt_exports
+
+      - name: Download new police logs
+        run: |
+          python .github/scripts/download_new_logs.py
+
+      - name: Run parse script if new PDFs found
+        run: |
+          if [ "$(ls -A pdfs_2025)" ]; then
+            python scripts/parse.py
+            echo "Processed new logs"
+          else
+            echo "No new logs to process"
+          fi
+
+      - name: Clean up files
+        run: |
+          rm -rf pdfs_2025/*
+          rm -rf txt_exports/*
+
+      - name: Update processed files record
+        run: |
+          python .github/scripts/update_processed_files.py
+
+      - name: Commit processed files record
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .github/processed_files.txt
+          git diff --staged --quiet || git commit -m "Update processed files record [skip ci]"
+          git push
