@@ -107,24 +107,21 @@ export default function IncidentPage() {
     if (incident && comments.length > 0) {
       const loadedVotes: Record<string, number> = {};
 
-      comments.forEach((comment) => {
-        const storageKey = `vote_${incident.id}_${comment.id}`;
-        const savedVote = localStorage.getItem(storageKey);
-        if (savedVote) {
-          loadedVotes[comment.id] = parseInt(savedVote);
-        }
+      const loadVotesRecursive = (comments: Comment[]) => {
+        comments.forEach((comment) => {
+          const storageKey = `vote_${incident.id}_${comment.id}`;
+          const savedVote = localStorage.getItem(storageKey);
+          if (savedVote) {
+            loadedVotes[comment.id] = parseInt(savedVote);
+          }
 
-        if (comment.replies) {
-          comment.replies.forEach((reply) => {
-            const replyStorageKey = `vote_${incident.id}_${reply.id}`;
-            const replySavedVote = localStorage.getItem(replyStorageKey);
-            if (replySavedVote) {
-              loadedVotes[reply.id] = parseInt(replySavedVote);
-            }
-          });
-        }
-      });
+          if (comment.replies && comment.replies.length > 0) {
+            loadVotesRecursive(comment.replies);
+          }
+        });
+      };
 
+      loadVotesRecursive(comments);
       setUserVotes(loadedVotes);
     }
   }, [incident, comments]);
@@ -596,33 +593,21 @@ export default function IncidentPage() {
         return;
       }
 
-      let updatedComments = [...comments];
-      let foundInTopLevel = false;
-
-      updatedComments = updatedComments.map((comment) => {
-        if (comment.id === id) {
-          foundInTopLevel = true;
-          return { ...comment, votes: comment.votes + voteChange };
-        }
-        return comment;
-      });
-
-      if (!foundInTopLevel) {
-        updatedComments = updatedComments.map((comment) => {
-          if (comment.replies) {
-            const updatedReplies = comment.replies.map((reply) => {
-              if (reply.id === id) {
-                return { ...reply, votes: reply.votes + voteChange };
-              }
-              return reply;
-            });
-            return { ...comment, replies: updatedReplies };
+      const updateCommentVotesRecursive = (comments: Comment[]): Comment[] => {
+        return comments.map((comment) => {
+          if (comment.id === id) {
+            return { ...comment, votes: comment.votes + voteChange };
+          } else if (comment.replies && comment.replies.length > 0) {
+            return {
+              ...comment,
+              replies: updateCommentVotesRecursive(comment.replies),
+            };
           }
           return comment;
         });
-      }
+      };
 
-      setComments(updatedComments);
+      setComments(updateCommentVotesRecursive([...comments]));
     } catch (err) {
       console.error("Error voting on comment:", err);
     }
