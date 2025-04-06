@@ -20,6 +20,9 @@ interface CommentProps {
   userVotes: Record<string, number>;
   depth?: number;
   parentId?: string;
+  isPartOfContinuedThread?: boolean;
+  onContinueThread?: (reply: Comment) => void;
+  onBackToThread?: () => void;
 }
 
 export const CommentComponent: React.FC<CommentProps> = ({
@@ -30,6 +33,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
   userVotes,
   depth = 0,
   parentId = null,
+  isPartOfContinuedThread = false,
+  onContinueThread,
+  onBackToThread,
 }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -58,13 +64,28 @@ export const CommentComponent: React.FC<CommentProps> = ({
     setReplyText(e.target.value);
   };
 
+  const handleContinueThread = (reply: Comment) => {
+    if (onContinueThread) {
+      onContinueThread(reply);
+    }
+  };
+
+  const handleBackToThread = () => {
+    if (onBackToThread) {
+      onBackToThread();
+    }
+  };
+
   const currentVote = userVotes[comment.id] || 0;
 
   const MAX_VISUAL_INDENT = 4;
+  const MAX_THREAD_DEPTH = 4;
 
   const visualIndent = Math.min(depth, MAX_VISUAL_INDENT);
 
   const showDepthIndicator = depth > MAX_VISUAL_INDENT;
+  const showContinueThread =
+    depth >= MAX_THREAD_DEPTH && comment.replies && comment.replies.length > 0;
 
   const hasDeepNesting = (comment: Comment, currentDepth = 0): boolean => {
     if (currentDepth > MAX_VISUAL_INDENT) return true;
@@ -134,12 +155,36 @@ export const CommentComponent: React.FC<CommentProps> = ({
         depth > 0 ? "mt-3" : "mb-4"
       } transition-colors duration-300`}
     >
+      {isPartOfContinuedThread && depth === 0 && (
+        <div className="mb-3">
+          <button
+            onClick={handleBackToThread}
+            className="text-sm bg-secondary/40 hover:bg-secondary/60 px-3 py-1 rounded-md flex items-center gap-1 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back to Thread
+          </button>
+        </div>
+      )}
+
       {depth === 0 ? (
         <Card className="overflow-hidden">
           <CardContent className="p-4">
             <div className="flex gap-3">
               <div
-                className="h-8 w-8 text-sm rounded-full flex items-center justify-center text-white font-medium"
+                className="h-8 w-8 text-sm rounded-full flex-shrink-0 flex items-center justify-center text-white font-medium"
                 style={{ backgroundColor: comment.user_color }}
               >
                 A
@@ -151,7 +196,9 @@ export const CommentComponent: React.FC<CommentProps> = ({
                     {formatDate(comment.created_at)}
                   </div>
                 </div>
-                <div className="mb-3 text-sm">{comment.comment_text}</div>
+                <div className="mb-3 text-sm w-full overflow-hidden text-wrap break-all hyphens-auto">
+                  {comment.comment_text}
+                </div>
                 <div className="flex gap-4 text-xs">
                   <button
                     onClick={() => {
@@ -361,6 +408,8 @@ export const CommentComponent: React.FC<CommentProps> = ({
                             userVotes={userVotes}
                             depth={depth + 1}
                             parentId={actualParentId}
+                            onContinueThread={handleContinueThread}
+                            onBackToThread={handleBackToThread}
                           />
                         ))}
                       </div>
@@ -398,21 +447,23 @@ export const CommentComponent: React.FC<CommentProps> = ({
           )}
 
           <div className={`pl-6 ${showDepthIndicator ? "pt-6" : ""}`}>
-            <div className="flex gap-3">
+            <div className="flex items-start">
               <div
-                className="h-6 w-6 text-xs rounded-full flex items-center justify-center text-white font-medium"
+                className="h-6 w-6 text-xs rounded-full flex-shrink-0 flex items-center justify-center text-white font-medium"
                 style={{ backgroundColor: comment.user_color }}
               >
                 A
               </div>
-              <div className="flex-1">
+              <div className="flex-1 ml-3">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="font-medium text-xs">Anonymous Niner</div>
                   <div className="text-xs text-muted-foreground">
                     {formatDate(comment.created_at)}
                   </div>
                 </div>
-                <div className="mb-3 text-sm">{comment.comment_text}</div>
+                <div className="mb-3 text-sm w-full overflow-hidden text-wrap break-all hyphens-auto">
+                  {comment.comment_text}
+                </div>
                 <div className="flex gap-4 text-xs">
                   <button
                     onClick={() => {
@@ -580,18 +631,44 @@ export const CommentComponent: React.FC<CommentProps> = ({
 
                     {showReplies && (
                       <div>
-                        {comment.replies.map((reply) => (
-                          <CommentComponent
-                            key={reply.id}
-                            comment={reply}
-                            onVote={onVote}
-                            onReply={onReply}
-                            theme={theme}
-                            userVotes={userVotes}
-                            depth={depth + 1}
-                            parentId={actualParentId}
-                          />
-                        ))}
+                        {showContinueThread ? (
+                          <div className="mt-4 py-2 border-t border-border">
+                            <button
+                              onClick={() => handleContinueThread(comment)}
+                              className={`text-sm ${theme.accentColor} hover:underline flex items-center gap-1`}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                              </svg>
+                              Continue Thread ({getTotalRepliesCount(comment)})
+                            </button>
+                          </div>
+                        ) : (
+                          comment.replies.map((reply) => (
+                            <CommentComponent
+                              key={reply.id}
+                              comment={reply}
+                              onVote={onVote}
+                              onReply={onReply}
+                              theme={theme}
+                              userVotes={userVotes}
+                              depth={depth + 1}
+                              parentId={actualParentId}
+                              onContinueThread={handleContinueThread}
+                              onBackToThread={handleBackToThread}
+                            />
+                          ))
+                        )}
                       </div>
                     )}
                   </div>

@@ -34,6 +34,11 @@ export default function IncidentPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [userVotes, setUserVotes] = useState<Record<string, number>>({});
+  const [continuedThreadComment, setContinuedThreadComment] =
+    useState<Comment | null>(null);
+  const [originalThreadState, setOriginalThreadState] = useState<
+    Comment[] | null
+  >(null);
 
   useEffect(() => {
     const fetchIncidentData = async () => {
@@ -656,6 +661,21 @@ export default function IncidentPage() {
     }
   };
 
+  const handleContinueThread = (comment: Comment) => {
+    if (!originalThreadState) {
+      setOriginalThreadState([...comments]);
+    }
+    setContinuedThreadComment(comment);
+  };
+
+  const handleBackToThread = () => {
+    if (originalThreadState) {
+      setComments(originalThreadState);
+      setContinuedThreadComment(null);
+      setOriginalThreadState(null);
+    }
+  };
+
   const getTotalCommentCount = () => {
     let count = comments.length;
     comments.forEach((comment) => {
@@ -970,6 +990,17 @@ export default function IncidentPage() {
                             </p>
                           </CardContent>
                         </Card>
+                      ) : continuedThreadComment ? (
+                        <CommentComponent
+                          key={continuedThreadComment.id}
+                          comment={continuedThreadComment}
+                          onVote={handleVote}
+                          onReply={handleReply}
+                          theme={theme}
+                          userVotes={userVotes}
+                          isPartOfContinuedThread={true}
+                          onBackToThread={handleBackToThread}
+                        />
                       ) : (
                         comments.map((comment) => (
                           <CommentComponent
@@ -979,6 +1010,7 @@ export default function IncidentPage() {
                             onReply={handleReply}
                             theme={theme}
                             userVotes={userVotes}
+                            onContinueThread={handleContinueThread}
                           />
                         ))
                       )}
