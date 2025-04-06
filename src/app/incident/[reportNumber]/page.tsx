@@ -6,11 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
-import { supabase, Incident } from "@/lib/supabase";
+import { supabase, Incident, Comment } from "@/lib/supabase";
+import {
+  getIncidentComments,
+  addComment,
+  addReply,
+  updateCommentVotes,
+  getTotalRepliesCount,
+} from "@/lib/comments";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { IncidentDetailMap } from "@/components/map/incident-detail-map";
 import IncidentSkeleton from "@/components/ui/incident-skeleton";
+import { CommentComponent } from "@/components/ui/comment";
 
 export default function IncidentPage() {
   const router = useRouter();
@@ -23,33 +31,17 @@ export default function IncidentPage() {
   const [activeTab, setActiveTab] = useState<"details" | "community">(
     "community"
   );
-
-  const [comments, setComments] = useState([
-    {
-      id: "1",
-      text: "Comment 1",
-      timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-      votes: 12,
-      userColor: "#FF4B66",
-    },
-    {
-      id: "2",
-      text: "Comment 2",
-      timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-      votes: 7,
-      userColor: "#3B82F6",
-    },
-    {
-      id: "3",
-      text: "Comment 3",
-      timestamp: new Date(Date.now() - 3600000 * 8).toISOString(),
-      votes: 4,
-      userColor: "#10B981",
-    },
-  ]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [userVotes, setUserVotes] = useState<Record<string, number>>({});
+  const [continuedThreadComment, setContinuedThreadComment] =
+    useState<Comment | null>(null);
+  const [originalThreadState, setOriginalThreadState] = useState<
+    Comment[] | null
+  >(null);
 
   useEffect(() => {
-    const fetchIncident = async () => {
+    const fetchIncidentData = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -65,6 +57,45 @@ export default function IncidentPage() {
         }
 
         setIncident(data);
+
+        if (data) {
+          setLoadingComments(true);
+          const { data: commentsData, error: commentsError } =
+            await getIncidentComments(data.id);
+
+          if (commentsError) {
+            console.error("Error fetching comments:", commentsError);
+          } else {
+            setComments(commentsData || []);
+          }
+          setLoadingComments(false);
+
+          const subscription = supabase
+            .channel(`incident-${data.id}-comments`)
+            .on(
+              "postgres_changes",
+              {
+                event: "*",
+                schema: "public",
+                table: "incident_comments",
+                filter: `incident_id=eq.${data.id}`,
+              },
+              async (payload) => {
+                console.log("Comment updated:", payload.eventType);
+                const { data: refreshedComments } = await getIncidentComments(
+                  data.id
+                );
+                if (refreshedComments) {
+                  setComments(refreshedComments);
+                }
+              }
+            )
+            .subscribe();
+
+          return () => {
+            subscription.unsubscribe();
+          };
+        }
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Unknown error occurred";
@@ -75,8 +106,31 @@ export default function IncidentPage() {
       }
     };
 
-    fetchIncident();
+    fetchIncidentData();
   }, [originalReportNumber]);
+
+  useEffect(() => {
+    if (incident && comments.length > 0) {
+      const loadedVotes: Record<string, number> = {};
+
+      const loadVotesRecursive = (comments: Comment[]) => {
+        comments.forEach((comment) => {
+          const storageKey = `vote_${incident.id}_${comment.id}`;
+          const savedVote = localStorage.getItem(storageKey);
+          if (savedVote) {
+            loadedVotes[comment.id] = parseInt(savedVote);
+          }
+
+          if (comment.replies && comment.replies.length > 0) {
+            loadVotesRecursive(comment.replies);
+          }
+        });
+      };
+
+      loadVotesRecursive(comments);
+      setUserVotes(loadedVotes);
+    }
+  }, [incident, comments]);
 
   const formatDate = (dateString: string) => {
     try {
@@ -466,9 +520,9 @@ export default function IncidentPage() {
     ? getIncidentTheme(incident.incident_type)
     : getIncidentTheme("Default");
 
-  const handleCommentSubmit = (e: React.FormEvent) => {
+  const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commentText.trim()) return;
+    if (!commentText.trim() || !incident) return;
 
     const colors = [
       "#FF4B66",
@@ -480,26 +534,260 @@ export default function IncidentPage() {
     ];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    const newComment = {
-      id: Date.now().toString(),
-      text: commentText,
-      timestamp: new Date().toISOString(),
-      votes: 0,
-      userColor: randomColor,
-    };
+    try {
+      const { error } = await addComment(incident.id, commentText, randomColor);
 
-    setComments([newComment, ...comments]);
-    setCommentText("");
+      if (error) {
+        console.error("Error adding comment:", error);
+        return;
+      }
+
+      const { data: refreshedComments } = await getIncidentComments(
+        incident.id
+      );
+      if (refreshedComments) {
+        setComments(refreshedComments);
+      }
+
+      setCommentText("");
+    } catch (err) {
+      console.error("Error submitting comment:", err);
+    }
   };
 
-  const handleVote = (id: string, increment: number) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === id
-          ? { ...comment, votes: comment.votes + increment }
-          : comment
-      )
-    );
+  const handleVote = async (
+    id: string,
+    increment: number,
+    previousVote: number
+  ) => {
+    try {
+      let newVoteState = 0;
+
+      if (previousVote === 0) {
+        newVoteState = increment > 0 ? 1 : -1;
+      } else if (previousVote === 1 && increment < 0) {
+        newVoteState = 0;
+      } else if (previousVote === -1 && increment > 0) {
+        newVoteState = 0;
+      } else {
+        newVoteState = increment > 0 ? 1 : -1;
+      }
+
+      const voteChange = newVoteState - previousVote;
+      const updatedUserVotes = { ...userVotes };
+
+      if (newVoteState === 0) {
+        delete updatedUserVotes[id];
+      } else {
+        updatedUserVotes[id] = newVoteState;
+      }
+
+      const storageKey = `vote_${incident?.id}_${id}`;
+
+      if (newVoteState !== 0) {
+        localStorage.setItem(storageKey, newVoteState.toString());
+      } else {
+        localStorage.removeItem(storageKey);
+      }
+
+      setUserVotes(updatedUserVotes);
+
+      const { error } = await updateCommentVotes(id, voteChange);
+
+      if (error) {
+        console.error("Error updating votes:", error);
+        return;
+      }
+
+      const updateCommentVotesRecursive = (comments: Comment[]): Comment[] => {
+        return comments.map((comment) => {
+          if (comment.id === id) {
+            return { ...comment, votes: comment.votes + voteChange };
+          } else if (comment.replies && comment.replies.length > 0) {
+            return {
+              ...comment,
+              replies: updateCommentVotesRecursive(comment.replies),
+            };
+          }
+          return comment;
+        });
+      };
+
+      setComments(updateCommentVotesRecursive([...comments]));
+
+      if (continuedThreadComment) {
+        const updateContinuedThreadVotes = (comment: Comment): Comment => {
+          if (comment.id === id) {
+            return { ...comment, votes: comment.votes + voteChange };
+          }
+
+          if (comment.replies && comment.replies.length > 0) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                updateContinuedThreadVotes(reply)
+              ),
+            };
+          }
+
+          return comment;
+        };
+
+        setContinuedThreadComment(
+          updateContinuedThreadVotes({ ...continuedThreadComment })
+        );
+      }
+
+      if (continuedThreadComment && originalThreadState) {
+        const updateVotesInOriginalState = (comments: Comment[]): Comment[] => {
+          return comments.map((c) => {
+            if (c.id === id) {
+              return { ...c, votes: c.votes + voteChange };
+            } else if (c.replies && c.replies.length > 0) {
+              return {
+                ...c,
+                replies: updateVotesInOriginalState(c.replies),
+              };
+            }
+            return c;
+          });
+        };
+
+        setOriginalThreadState(
+          updateVotesInOriginalState([...originalThreadState])
+        );
+      }
+    } catch (err) {
+      console.error("Error voting on comment:", err);
+    }
+  };
+
+  const handleReply = async (
+    parentId: string,
+    replyToId: string,
+    replyText: string
+  ) => {
+    if (!replyText.trim() || !incident) return;
+
+    const colors = [
+      "#FF4B66",
+      "#3B82F6",
+      "#10B981",
+      "#8B5CF6",
+      "#F59E0B",
+      "#EC4899",
+    ];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    try {
+      const { error } = await addReply(
+        incident.id,
+        parentId,
+        replyToId,
+        replyText,
+        randomColor
+      );
+
+      if (error) {
+        console.error("Error adding reply:", error);
+        return;
+      }
+
+      const { data: refreshedComments } = await getIncidentComments(
+        incident.id
+      );
+
+      if (refreshedComments) {
+        setComments(refreshedComments);
+
+        if (continuedThreadComment) {
+          const findUpdatedThreadComment = (
+            comments: Comment[]
+          ): Comment | null => {
+            for (const comment of comments) {
+              if (comment.id === continuedThreadComment.id) {
+                return comment;
+              }
+
+              if (comment.replies && comment.replies.length > 0) {
+                const found = findUpdatedThreadComment(comment.replies);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+
+          const updatedThreadComment =
+            findUpdatedThreadComment(refreshedComments);
+          if (updatedThreadComment) {
+            setContinuedThreadComment(updatedThreadComment);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error submitting reply:", err);
+    }
+  };
+
+  const [threadHistory, setThreadHistory] = useState<
+    {
+      comment: Comment;
+      originalState: Comment[];
+    }[]
+  >([]);
+
+  const handleContinueThread = (comment: Comment) => {
+    if (continuedThreadComment) {
+      setThreadHistory([
+        ...threadHistory,
+        {
+          comment: continuedThreadComment,
+          originalState: originalThreadState || [],
+        },
+      ]);
+    } else if (!originalThreadState) {
+      setOriginalThreadState([...comments]);
+    }
+
+    setContinuedThreadComment(comment);
+  };
+
+  const handleBackToThread = () => {
+    if (threadHistory.length > 0) {
+      const newHistory = [...threadHistory];
+      const lastEntry = newHistory.pop();
+
+      setContinuedThreadComment(lastEntry?.comment || null);
+      setThreadHistory(newHistory);
+    } else if (originalThreadState) {
+      setComments(originalThreadState);
+      setContinuedThreadComment(null);
+      setOriginalThreadState(null);
+    }
+  };
+
+  const getTotalCommentCount = () => {
+    let count = comments.length;
+    comments.forEach((comment) => {
+      if (comment.replies) {
+        count += getTotalRepliesCount(comment);
+      }
+    });
+    return count;
+  };
+
+  const getTotalVotes = () => {
+    const countVotesRecursively = (comments: Comment[]): number => {
+      return comments.reduce((sum, comment) => {
+        let total = sum + comment.votes;
+        if (comment.replies && comment.replies.length > 0) {
+          total += countVotesRecursively(comment.replies);
+        }
+        return total;
+      }, 0);
+    };
+
+    return countVotesRecursively(comments);
   };
 
   return (
@@ -659,7 +947,7 @@ export default function IncidentPage() {
                   </svg>
                   Community Discussion
                   <span className="bg-secondary/80 text-xs px-2 py-0.5 rounded-full">
-                    {comments.length}
+                    {getTotalCommentCount()}
                   </span>
                 </button>
                 <button
@@ -745,7 +1033,7 @@ export default function IncidentPage() {
                           <div className="absolute bottom-3 right-3 flex gap-2">
                             <button
                               type="submit"
-                              className={`${theme.accentBg} text-white rounded-full px-4 py-1 text-sm font-medium hover:opacity-90 transition-colors`}
+                              className={`${theme.accentBg} text-white px-4 py-1 rounded-md font-semibold text-sm hover:opacity-90 transition-colors`}
                               disabled={!commentText.trim()}
                             >
                               Post
@@ -763,7 +1051,7 @@ export default function IncidentPage() {
                   <div className="mt-6">
                     <div className="flex justify-between items-center mb-4 px-1">
                       <h2 className="text-lg font-semibold">
-                        Comments ({comments.length})
+                        Comments ({getTotalCommentCount()})
                       </h2>
                       <div className="flex gap-3">
                         <button className={`text-sm ${theme.accentColor}`}>
@@ -776,7 +1064,15 @@ export default function IncidentPage() {
                     </div>
 
                     <div className="space-y-4">
-                      {comments.length === 0 ? (
+                      {loadingComments ? (
+                        <Card>
+                          <CardContent className="py-10 text-center">
+                            <p className="text-muted-foreground">
+                              Loading comments...
+                            </p>
+                          </CardContent>
+                        </Card>
+                      ) : comments.length === 0 ? (
                         <Card>
                           <CardContent className="py-10 text-center">
                             <p className="text-muted-foreground">
@@ -784,82 +1080,29 @@ export default function IncidentPage() {
                             </p>
                           </CardContent>
                         </Card>
+                      ) : continuedThreadComment ? (
+                        <CommentComponent
+                          key={continuedThreadComment.id}
+                          comment={continuedThreadComment}
+                          onVote={handleVote}
+                          onReply={handleReply}
+                          theme={theme}
+                          userVotes={userVotes}
+                          isPartOfContinuedThread={true}
+                          onBackToThread={handleBackToThread}
+                          onContinueThread={handleContinueThread}
+                        />
                       ) : (
                         comments.map((comment) => (
-                          <Card key={comment.id} className="overflow-hidden">
-                            <CardContent className="p-4">
-                              <div className="flex gap-3">
-                                <div
-                                  className="h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                                  style={{ backgroundColor: comment.userColor }}
-                                >
-                                  A
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <div className="font-medium text-sm">
-                                      Anonymous Niner
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      {formatDate(comment.timestamp)}
-                                    </div>
-                                  </div>
-                                  <div className="text-sm mb-3">
-                                    {comment.text}
-                                  </div>
-                                  <div className="flex gap-4 text-xs">
-                                    <button
-                                      onClick={() => handleVote(comment.id, 1)}
-                                      className={`flex items-center gap-1 text-muted-foreground hover:${theme.accentColor} transition-colors`}
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="12"
-                                        height="12"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      >
-                                        <path d="M12 8L18 14M12 8L6 14M12 8V20M6 4H18" />
-                                      </svg>
-                                      Upvote
-                                    </button>
-                                    <span className="text-muted-foreground">
-                                      {comment.votes} votes
-                                    </span>
-                                    <button
-                                      onClick={() => handleVote(comment.id, -1)}
-                                      className={`flex items-center gap-1 text-muted-foreground hover:${theme.accentColor} transition-colors`}
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="12"
-                                        height="12"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      >
-                                        <path d="M12 16L18 10M12 16L6 10M12 16V4M6 20H18" />
-                                      </svg>
-                                      Downvote
-                                    </button>
-                                    <button className="text-muted-foreground hover:text-foreground transition-colors">
-                                      Reply
-                                    </button>
-                                    <button className="text-muted-foreground hover:text-foreground transition-colors">
-                                      Report
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
+                          <CommentComponent
+                            key={comment.id}
+                            comment={comment}
+                            onVote={handleVote}
+                            onReply={handleReply}
+                            theme={theme}
+                            userVotes={userVotes}
+                            onContinueThread={handleContinueThread}
+                          />
                         ))
                       )}
                     </div>
@@ -914,7 +1157,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              {comments.length}
+                              {getTotalCommentCount()}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Comments
@@ -944,10 +1187,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              {comments.reduce(
-                                (sum, comment) => sum + comment.votes,
-                                0
-                              )}
+                              {getTotalVotes()}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Total Votes
@@ -960,19 +1200,29 @@ export default function IncidentPage() {
                             Most Active Users
                           </div>
                           <div className="flex -space-x-2">
-                            {comments.slice(0, 5).map((comment, index) => (
-                              <div
-                                key={index}
-                                className="h-8 w-8 rounded-full border-2 border-background flex items-center justify-center text-white text-xs font-bold"
-                                style={{ backgroundColor: comment.userColor }}
-                              >
-                                A
+                            {loadingComments ? (
+                              <div className="text-xs text-muted-foreground">
+                                Loading user data...
                               </div>
-                            ))}
-                            {comments.length > 5 && (
-                              <div className="h-8 w-8 rounded-full border-2 border-background bg-secondary/50 flex items-center justify-center text-xs font-medium">
-                                +{comments.length - 5}
-                              </div>
+                            ) : (
+                              <>
+                                {comments.slice(0, 5).map((comment, index) => (
+                                  <div
+                                    key={index}
+                                    className="h-8 w-8 rounded-full border-2 border-background flex items-center justify-center text-white text-xs font-bold"
+                                    style={{
+                                      backgroundColor: comment.user_color,
+                                    }}
+                                  >
+                                    A
+                                  </div>
+                                ))}
+                                {getTotalCommentCount() > 5 && (
+                                  <div className="h-8 w-8 rounded-full border-2 border-background bg-secondary/50 flex items-center justify-center text-xs font-medium">
+                                    +{getTotalCommentCount() - 5}
+                                  </div>
+                                )}
+                              </>
                             )}
                           </div>
                         </div>
@@ -1238,7 +1488,7 @@ export default function IncidentPage() {
                       >
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                       </svg>
-                      Join the Discussion ({comments.length} comments)
+                      Join the Discussion ({getTotalCommentCount()} comments)
                     </button>
                   </div>
                 </div>
