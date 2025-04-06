@@ -666,6 +666,20 @@ export default function IncidentPage() {
     return count;
   };
 
+  const getTotalVotes = () => {
+    const countVotesRecursively = (comments: Comment[]): number => {
+      return comments.reduce((sum, comment) => {
+        let total = sum + comment.votes;
+        if (comment.replies && comment.replies.length > 0) {
+          total += countVotesRecursively(comment.replies);
+        }
+        return total;
+      }, 0);
+    };
+
+    return countVotesRecursively(comments);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -1050,15 +1064,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              {comments.reduce((sum, comment) => {
-                                let total = sum + comment.votes;
-                                if (comment.replies) {
-                                  comment.replies.forEach((reply) => {
-                                    total += reply.votes;
-                                  });
-                                }
-                                return total;
-                              }, 0)}
+                              {getTotalVotes()}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Total Votes
