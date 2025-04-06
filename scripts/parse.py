@@ -20,7 +20,7 @@ incident_type_set = set([
     "Parking Violation", "Injured Subject", "911 Hang Up", "Intoxicated Person", "Missing Person", "BOLO",
     "Disabled Elevator", "Animal Control", "Utilities Outage", "Vehicle Lockout", "Elevator Entrapment",
     "Traffic Stop", "Suicide", "Suicide Ideation", "Fraud", "Illegal Parking", "Indecent Exposure",
-    "Crash", "Assault", "Assist CMPD"
+    "Crash", "Assault", "Assist CMPD", "Larceny of Bicycle", "Larceny of Laptop", "Accident/Property Damage", "Vehicle Stop"
 ])
 
 incident_location_set = set([
@@ -36,7 +36,7 @@ incident_location_set = set([
     "SAC", "Barnhardt", "Student Activity Center", "Lot 20", "Lot 4", "Colvard", "Storrs", "Woodward",
     "Greek Village", "Barnard", "Police and Public Safety", "University Recreation Center",
     "Sycamore Hall", "Sycamore", "Witherspoon", "Martin", "Wilson", "Scott", "Oak", "Maple", "Pine",
-    "Laurel", "Lynch"
+    "Laurel", "Lynch", "Duke Hall", "Barnhardt Lane", "Grigg Hall", "Foundation", "Sanford Hall", 
 ])
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)

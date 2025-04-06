@@ -158,6 +158,20 @@ export default function IncidentPage() {
         accentColor: "text-yellow-500",
         accentBg: "bg-yellow-500/10",
       },
+      "Larceny of Bicycle": {
+        color: "text-yellow-500",
+        emoji: "💰",
+        bgGradient: "from-yellow-500/5 to-yellow-500/10",
+        accentColor: "text-yellow-500",
+        accentBg: "bg-yellow-500/10",
+      },
+      "Larceny of Laptop": {
+        color: "text-yellow-500",
+        emoji: "💰",
+        bgGradient: "from-yellow-500/5 to-yellow-500/10",
+        accentColor: "text-yellow-500",
+        accentBg: "bg-yellow-500/10",
+      },
       Theft: {
         color: "text-yellow-500",
         emoji: "💰",
@@ -182,6 +196,13 @@ export default function IncidentPage() {
       },
 
       "Accident/Property": {
+        color: "text-orange-500",
+        emoji: "💥",
+        bgGradient: "from-orange-500/5 to-orange-500/10",
+        accentColor: "text-orange-500",
+        accentBg: "bg-orange-500/10",
+      },
+      "Accident/Property Damage": {
         color: "text-orange-500",
         emoji: "💥",
         bgGradient: "from-orange-500/5 to-orange-500/10",
@@ -224,6 +245,13 @@ export default function IncidentPage() {
         accentBg: "bg-orange-500/10",
       },
       "Traffic Stop": {
+        color: "text-orange-500",
+        emoji: "🛑",
+        bgGradient: "from-orange-500/5 to-orange-500/10",
+        accentColor: "text-orange-500",
+        accentBg: "bg-orange-500/10",
+      },
+      "Vehicle Stop": {
         color: "text-orange-500",
         emoji: "🛑",
         bgGradient: "from-orange-500/5 to-orange-500/10",

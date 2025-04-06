@@ -103,6 +103,11 @@ const LOCATION_COORDINATES: Record<string, { lat: number; lng: number }> = {
   Pine: { lat: 35.30935844112632, lng: -80.7310961835919 },
   Laurel: { lat: 35.30276133091521, lng: -80.73656945127522 },
   Lynch: { lat: 35.31028185878501, lng: -80.73372955747121 },
+  "Duke Hall": { lat: 35.31197015949181, lng: -80.74120570366482 },
+  "Barnhardt Lane": { lat: 35.30629307649671, lng: -80.73623338389348 },
+  "Grigg Hall": { lat: 35.31131792912825, lng: -80.74188240561898 },
+  Foundation: { lat: 35.29791415397593, lng: -80.73689994313516 },
+  "Sanford Hall": { lat: 35.30302555985922, lng: -80.73352501718196 },
 };
 
 const DEFAULT_LOCATION = { lat: 35.30633448460147, lng: -80.73340059330613 };

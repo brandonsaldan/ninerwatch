@@ -20,17 +20,21 @@ export default function Home() {
   const getBadgeColor = (type: string) => {
     const typeToColor: Record<string, string> = {
       Larceny: "bg-yellow-500/10 text-yellow-500",
+      "Larceny of Bicycle": "bg-yellow-500/10 text-yellow-500",
+      "Larceny of Laptop": "bg-yellow-500/10 text-yellow-500",
       Theft: "bg-yellow-500/10 text-yellow-500",
       "Lost or Stolen": "bg-purple-500/10 text-purple-500",
       Fraud: "bg-yellow-500/10 text-yellow-500",
 
       "Accident/Property": "bg-orange-500/10 text-orange-500",
+      "Accident/Property Damage": "bg-orange-500/10 text-orange-500",
       "Vehicle Accident": "bg-orange-500/10 text-orange-500",
       "Hit and Run": "bg-orange-500/10 text-orange-500",
       "Hit and Run/Property": "bg-orange-500/10 text-orange-500",
       "Disabled Vehicle": "bg-orange-500/10 text-orange-500",
       "Vehicle Lockout": "bg-orange-500/10 text-orange-500",
       "Traffic Stop": "bg-orange-500/10 text-orange-500",
+      "Vehicle Stop": "bg-orange-500/10 text-orange-500",
       Crash: "bg-orange-500/10 text-orange-500",
       "Parking Violation": "bg-orange-300/10 text-orange-300",
       "Illegal Parking": "bg-orange-300/10 text-orange-300",
