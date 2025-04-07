@@ -41,6 +41,7 @@ export type Comment = {
   votes: number;
   created_at: string;
   replies?: Comment[];
+  crime_incidents?: Incident;
 };
 
 export const supabase = createClient<{
@@ -50,6 +51,16 @@ export const supabase = createClient<{
         Row: Incident;
         Insert: Omit<Incident, "id" | "created_at">;
         Update: Partial<Omit<Incident, "id" | "created_at">>;
+      };
+      incident_comments: {
+        Row: Comment;
+        Insert: Omit<
+          Comment,
+          "id" | "created_at" | "crime_incidents" | "replies"
+        >;
+        Update: Partial<
+          Omit<Comment, "id" | "created_at" | "crime_incidents" | "replies">
+        >;
       };
     };
   };

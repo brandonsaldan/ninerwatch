@@ -171,7 +171,7 @@ export function SnitchRating() {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg flex items-center gap-2">
-          <span className="text-red-500">🚨</span> Snitch Rating
+          <span className="text-red-500">🚨</span> Snitch Index
           <div className="ml-auto text-xs bg-secondary/60 px-2 py-1 rounded-full">
             UNOFFICIAL
           </div>

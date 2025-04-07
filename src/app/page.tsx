@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import {
   Card,
   CardContent,
@@ -18,6 +19,11 @@ import {
   SnitchRating,
   useTopSnitchRating,
 } from "@/components/dashboard/snitch-rating";
+import { LatestComments } from "@/components/dashboard/latest-comments";
+
+const NewsTicker = dynamic(() => import("@/components/dashboard/news-ticker"), {
+  ssr: false,
+});
 
 export default function Home() {
   const { incidents, loading, error, incidentTypes } = useIncidents();
@@ -535,6 +541,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <NewsTicker />
 
       <main className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -589,7 +596,9 @@ export default function Home() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Incident Types</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <span className="text-blue-500">🕵️‍♂️</span> Incident Types
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {loading ? (
@@ -666,6 +675,7 @@ export default function Home() {
                 )}
               </CardContent>
             </Card>
+            <LatestComments />
           </div>
 
           <div className="lg:col-span-2 flex flex-col gap-6">
