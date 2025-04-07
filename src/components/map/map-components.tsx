@@ -410,7 +410,7 @@ export default function MapComponents({ incidentId }: { incidentId?: string }) {
   return (
     <MapContainer
       center={[center[0], center[1]] as [number, number]}
-      zoom={16}
+      zoom={15}
       scrollWheelZoom={true}
       style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
       className="z-0"

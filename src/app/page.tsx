@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -13,9 +14,37 @@ import Footer from "@/components/dashboard/footer";
 import { useIncidents } from "@/context/incidents-context";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
+import {
+  SnitchRating,
+  useTopSnitchRating,
+} from "@/components/dashboard/snitch-rating";
 
 export default function Home() {
-  const { incidents, loading, error } = useIncidents();
+  const { incidents, loading, error, incidentTypes } = useIncidents();
+  const topRating = useTopSnitchRating();
+
+  const topHotSpot = useMemo(() => {
+    if (!incidents.length) return { location: "N/A", count: 0 };
+
+    const locationCounts: Record<string, number> = {};
+
+    incidents.forEach((incident) => {
+      const location = incident.incident_location;
+      locationCounts[location] = (locationCounts[location] || 0) + 1;
+    });
+
+    let topLocation = "";
+    let maxCount = 0;
+
+    Object.entries(locationCounts).forEach(([location, count]) => {
+      if (count > maxCount) {
+        topLocation = location;
+        maxCount = count;
+      }
+    });
+
+    return { location: topLocation, count: maxCount };
+  }, [incidents]);
 
   const getBadgeColor = (type: string) => {
     const typeToColor: Record<string, string> = {
@@ -266,106 +295,232 @@ export default function Home() {
 
   const recentIncidents = loading ? [] : incidents.slice(0, 10);
 
+  const getColorClass = (type: string) => {
+    const colorClasses = getBadgeColor(type).split(" ");
+    const bgClass = colorClasses.find((cls) => cls.startsWith("text-"));
+    if (bgClass) {
+      return bgClass.replace("text-", "bg-");
+    }
+    return "bg-gray-500";
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <Card className="lg:col-span-3">
-            <CardContent className="pt-6 h-[700px]">
-              <CampusMap />
+        {/* Top section with stats overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card className="bg-gradient-to-r from-red-500/10 to-red-500/5">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full bg-red-500/20 flex items-center justify-center text-2xl">
+                🚨
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{incidents.length}</p>
+                <p className="text-sm text-muted-foreground">Total Incidents</p>
+              </div>
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[#ff4b66]">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff4b66] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ff4b66]"></span>
-                </span>
-                Live Incidents
-              </CardTitle>
-              <CardDescription>Latest reported events</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="py-20 text-center">
-                  <p className="text-muted-foreground">Loading incidents...</p>
-                </div>
-              ) : error ? (
-                <div className="py-20 text-center">
-                  <p className="text-red-500">Error: {error}</p>
-                </div>
-              ) : (
-                <div className="space-y-4 max-h-[580px] overflow-y-auto pr-2">
-                  {recentIncidents.map((incident) => (
-                    <div
-                      key={incident.id}
-                      className="pb-4 border-b border-border"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium">
-                            {incident.incident_type}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {incident.incident_location}
-                          </p>
-                          <div className="relative group">
-                            <p className="mt-2 mb-2 text-sm text-muted-foreground line-clamp-2 overflow-hidden">
-                              {incident.incident_description ||
-                                "No description available."}
-                            </p>
-                            {incident.incident_description &&
-                              incident.incident_description.length > 100 && (
-                                <div className="absolute z-10 invisible group-hover:visible bg-popover text-popover-foreground p-2 rounded-md shadow-md w-72 text-xs mt-1">
-                                  {incident.incident_description}
-                                </div>
-                              )}
+          <Card className="bg-gradient-to-r from-yellow-500/10 to-yellow-500/5">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full bg-yellow-500/20 flex items-center justify-center text-2xl">
+                📍
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{topHotSpot.location}</p>
+                <p className="text-sm text-muted-foreground">
+                  Top Hot Spot ({topHotSpot.count} incidents)
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-blue-500/10 to-blue-500/5">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl">
+                👮‍♀️
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{topRating?.score || "--"}</p>
+                <p className="text-sm text-muted-foreground">
+                  Highest Snitch Rating
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Bento grid layout - with fixed heights */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Left column - Map */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
+            <Card className="shadow-lg">
+              <CardContent className="p-0 h-[550px]">
+                <CampusMap />
+              </CardContent>
+            </Card>
+
+            {/* Incident Type Breakdown below map */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Incident Types</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <div className="py-4 text-center">
+                    <p className="text-muted-foreground">
+                      Loading incident data...
+                    </p>
+                  </div>
+                ) : incidentTypes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      {incidentTypes.slice(0, 3).map((item) => (
+                        <div
+                          key={item.incident_type}
+                          className="flex items-center"
+                        >
+                          <div className="flex-1 text-sm">
+                            {item.incident_type}
+                          </div>
+                          <div className="text-sm font-medium">
+                            {item.count}
+                          </div>
+                          <div className="ml-2 w-24 h-2 bg-secondary/30 rounded-full">
+                            <div
+                              className={getColorClass(item.incident_type)}
+                              style={{
+                                width: `${Math.min(
+                                  100,
+                                  (item.count / incidentTypes[0].count) * 100
+                                )}%`,
+                              }}
+                            ></div>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      {incidentTypes.slice(3, 6).map((item) => (
                         <div
-                          className={`${getBadgeColor(
-                            incident.incident_type
-                          )} text-xs px-2 py-1 rounded-full whitespace-nowrap`}
+                          key={item.incident_type}
+                          className="flex items-center"
                         >
-                          {incident.incident_type}
+                          <div className="flex-1 text-sm">
+                            {item.incident_type}
+                          </div>
+                          <div className="text-sm font-medium">
+                            {item.count}
+                          </div>
+                          <div className="ml-2 w-24 h-2 bg-secondary/30 rounded-full">
+                            <div
+                              className={getColorClass(item.incident_type)}
+                              style={{
+                                width: `${Math.min(
+                                  100,
+                                  (item.count / incidentTypes[0].count) * 100
+                                )}%`,
+                              }}
+                            ></div>
+                          </div>
                         </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {formatDate(incident.time_reported)}
-                      </p>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-4 text-center">
+                    <p className="text-muted-foreground">
+                      No incident data available.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right column - Combined incidents and snitch rating */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            {/* Live incidents with fixed height */}
+            <Card className="shadow-md border-[#ff4b66]/20">
+              <CardHeader className="pb-4 rounded-t-xl text-card-foreground shadow bg-gradient-to-r from-[#ff4b66]/10 to-transparent">
+                <CardTitle className="flex items-center gap-2 text-[#ff4b66]">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff4b66] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ff4b66]"></span>
+                  </span>
+                  Live Incidents
+                </CardTitle>
+                <CardDescription>Latest reported events</CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                {loading ? (
+                  <div className="py-10 text-center">
+                    <p className="text-muted-foreground">
+                      Loading incidents...
+                    </p>
+                  </div>
+                ) : error ? (
+                  <div className="py-10 text-center">
+                    <p className="text-red-500">Error: {error}</p>
+                  </div>
+                ) : (
+                  <div className="h-[380px] overflow-y-auto divide-y divide-border">
+                    {recentIncidents.slice(0, 5).map((incident) => (
                       <Link
+                        key={incident.id}
                         href={`/incident/${incident.report_number.replace(
                           /\//g,
                           "-"
                         )}`}
-                        passHref
-                        legacyBehavior
+                        className="block hover:bg-secondary/10 transition-colors"
                       >
-                        <a
-                          className="block mt-4 text-center py-2 px-3 rounded bg-secondary/60 hover:bg-secondary/80 text-white text-xs font-medium transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          View Incident Details →
-                        </a>
+                        <div className="p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="font-medium">
+                              {incident.incident_location}
+                            </div>
+                            <div
+                              className={`${getBadgeColor(
+                                incident.incident_type
+                              )} text-xs px-2 py-1 rounded-full whitespace-nowrap`}
+                            >
+                              {incident.incident_type}
+                            </div>
+                          </div>
+                          <div className="relative group">
+                            <p className="text-sm text-muted-foreground line-clamp-2 overflow-hidden">
+                              {incident.incident_description ||
+                                "No description available."}
+                            </p>
+                          </div>
+                          <div className="flex justify-between items-center mt-4">
+                            <p className="text-xs text-muted-foreground">
+                              {formatDate(incident.time_reported)}
+                            </p>
+                            <span className="text-xs bg-secondary/60 hover:bg-secondary/80 px-2 py-1 rounded text-foreground transition-colors">
+                              View Details →
+                            </span>
+                          </div>
+                        </div>
                       </Link>
-                    </div>
-                  ))}
-
-                  {recentIncidents.length === 0 && (
-                    <div className="py-10 text-center">
-                      <p className="text-muted-foreground">
-                        No incidents to display
-                      </p>
-                    </div>
-                  )}
+                    ))}
+                  </div>
+                )}
+                <div className="p-3 border-t border-border text-center">
+                  <Link href="/incidents" passHref>
+                    <button className="text-sm bg-secondary/50 hover:bg-secondary px-4 py-2 rounded-md text-foreground hover:text-foreground transition-colors">
+                      View all incidents →
+                    </button>
+                  </Link>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Snitch Rating - immediately below incidents */}
+            <SnitchRating />
+          </div>
         </div>
       </main>
       <Footer />
