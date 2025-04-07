@@ -485,9 +485,20 @@ def parse_incidents_from_file(path):
 
     return parsed
 
+def incident_exists(report_number):
+    result = supabase.table("crime_incidents").select("id").eq("report_number", report_number).execute()
+    return len(result.data) > 0
+
 def insert_to_supabase(incidents):
+    added_count = 0
+    skipped_count = 0
     with open(FAILED_EXPORT, "a", encoding="utf-8") as fail_log:
         for item in incidents:
+            if incident_exists(item["report_number"]):
+                print(f"📋 Skipping existing record: {item['report_number']}")
+                skipped_count += 1
+                continue
+                
             try:
                 date_str = datetime.datetime.strptime(item["date_reported"], "%m/%d/%Y").strftime("%Y-%m-%d")
             except ValueError:
@@ -510,15 +521,30 @@ def insert_to_supabase(incidents):
 
             try:
                 supabase.table("crime_incidents").insert(data).execute()
+                added_count += 1
+                print(f"✅ Added incident: {item['report_number']}")
             except Exception as e:
                 print(f"❌ Failed to insert {item['report_number']}: {e}")
                 fail_log.write(f"Insert fail: {item['report_number']} | {str(e)}\n")
+    
+    return added_count, skipped_count
 
 if __name__ == "__main__":
     convert_pdfs_to_text()
+    total_added = 0
+    total_skipped = 0
+    total_parsed = 0
+    
     for fname in os.listdir(TXT_DIR):
         if fname.endswith(".txt"):
             full_path = os.path.join(TXT_DIR, fname)
             parsed = parse_incidents_from_file(full_path)
-            insert_to_supabase(parsed)
-            print(f"Inserted {len(parsed)} incidents from {fname}")
+            total_parsed += len(parsed)
+            
+            added, skipped = insert_to_supabase(parsed)
+            total_added += added
+            total_skipped += skipped
+            
+            print(f"Processed {len(parsed)} incidents from {fname}")
+    
+    print(f"Summary: Total parsed: {total_parsed}, Added: {total_added}, Skipped (already exist): {total_skipped}")

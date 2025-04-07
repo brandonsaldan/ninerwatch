@@ -33,26 +33,25 @@ jobs:
           mkdir -p txt_exports
 
       - name: Download new police logs
+        id: download
         run: |
           python .github/scripts/download_new_logs.py
+          if [ -z "$(ls -A pdfs_2025)" ]; then
+            echo "new_logs_found=false" >> $GITHUB_OUTPUT
+          else
+            echo "new_logs_found=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Run parse script if new PDFs found
+        if: steps.download.outputs.new_logs_found == 'true'
         run: |
-          if [ "$(ls -A pdfs_2025)" ]; then
-            python scripts/parse.py
-            echo "Processed new logs"
-          else
-            echo "No new logs to process"
-          fi
+          python scripts/parse.py
+          echo "Processed new logs"
 
       - name: Clean up files
         run: |
           rm -rf pdfs_2025/*
           rm -rf txt_exports/*
-
-      - name: Update processed files record
-        run: |
-          python .github/scripts/update_processed_files.py
 
       - name: Commit processed files record
         run: |
