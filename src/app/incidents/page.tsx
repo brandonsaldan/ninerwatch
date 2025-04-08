@@ -179,8 +179,8 @@ export default function IncidentsPage() {
       <Header />
 
       <main className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-          <h1 className="text-4xl flex items-center gap-2 font-bold mb-0">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+          <h1 className="text-4xl flex items-center gap-2 font-bold mb-6 md:mb-0">
             <span className="text-blue-500">🕵️‍♂️</span> Campus Incidents
           </h1>
           <div className="flex flex-col md:flex-row gap-3">
@@ -309,7 +309,7 @@ export default function IncidentsPage() {
                     {formatGroupDate(dateKey)}
                   </h2>
                 </div>
-                <div className="ml-8 border-l-2 border-border pl-8 space-y-6 pt-2 pb-6 relative">
+                <div className="md:ml-8 md:border-l-2 border-border md:pl-8 space-y-6 pt-2 pb-6 relative">
                   {incidents.map((incident) => (
                     <Link
                       key={incident.id}
@@ -319,7 +319,7 @@ export default function IncidentsPage() {
                       )}`}
                       className="block"
                     >
-                      <div className="absolute -left-4 w-8 h-8 rounded-full bg-background border-2 border-border flex items-center justify-center">
+                      <div className="hidden absolute -left-4 w-8 h-8 rounded-full bg-background border-2 border-border md:flex items-center justify-center">
                         <span className="text-lg">
                           {getIncidentEmoji(incident.incident_type)}
                         </span>
