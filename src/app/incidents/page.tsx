@@ -2,6 +2,13 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
@@ -179,7 +186,7 @@ export default function IncidentsPage() {
               <input
                 type="text"
                 placeholder="Search incidents..."
-                className="w-full md:w-64 px-4 py-2 rounded-md bg-secondary/30 border border-border focus:outline-none focus:ring-1 focus:ring-primary/40"
+                className="w-full md:w-64 px-4 py-2 rounded-md bg-secondary/30 border border-border focus:outline-none focus:ring-0 focus:border-white transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -205,30 +212,45 @@ export default function IncidentsPage() {
                 </button>
               )}
             </div>
-            <select
-              className="px-4 py-2 rounded-md bg-secondary/30 border border-border focus:outline-none focus:ring-1 focus:ring-primary/40"
-              value={selectedType || ""}
-              onChange={(e) => setSelectedType(e.target.value || null)}
+            <Select
+              value={selectedType || "all"}
+              onValueChange={(value) =>
+                setSelectedType(value === "all" ? null : value)
+              }
             >
-              <option value="">All Types</option>
-              {incidentTypes.map((type) => (
-                <option key={type.incident_type} value={type.incident_type}>
-                  {type.incident_type} ({type.count})
-                </option>
-              ))}
-            </select>
-            <select
-              className="px-4 py-2 rounded-md bg-secondary/30 border border-border focus:outline-none focus:ring-1 focus:ring-primary/40"
-              value={selectedLocation || ""}
-              onChange={(e) => setSelectedLocation(e.target.value || null)}
+              <SelectTrigger className="w-full md:w-[220px] bg-secondary/30 border-border">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {incidentTypes.map((type) => (
+                  <SelectItem
+                    key={type.incident_type}
+                    value={type.incident_type}
+                  >
+                    {type.incident_type} ({type.count})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={selectedLocation || "all"}
+              onValueChange={(value) =>
+                setSelectedLocation(value === "all" ? null : value)
+              }
             >
-              <option value="">All Locations</option>
-              {uniqueLocations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full md:w-[220px] bg-secondary/30 border-border">
+                <SelectValue placeholder="All Locations" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Locations</SelectItem>
+                {uniqueLocations.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
