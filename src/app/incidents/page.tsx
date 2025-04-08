@@ -180,7 +180,9 @@ export default function IncidentsPage() {
 
       <main className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-          <h1 className="text-4xl font-bold mb-4 md:mb-0">Campus Incidents</h1>
+          <h1 className="text-4xl flex items-center gap-2 font-bold mb-0">
+            <span className="text-blue-500">🕵️‍♂️</span> Campus Incidents
+          </h1>
           <div className="flex flex-col md:flex-row gap-3">
             <div className="relative">
               <input
