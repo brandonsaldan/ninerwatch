@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const pathname = usePathname();
+
   return (
     <header className="border-b border-border">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -12,25 +17,41 @@ export default function Header() {
           <nav className="ml-3 hidden md:flex gap-6">
             <Link
               href="/"
-              className="text-foreground hover:text-primary/80 transition ease-in-out duration-300 tracking-tight"
+              className={
+                pathname === "/"
+                  ? "text-foreground transition ease-in-out duration-300 tracking-tight"
+                  : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              }
             >
               Dashboard
             </Link>
             <Link
               href="/incidents"
-              className="text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              className={
+                pathname === "/incidents"
+                  ? "text-foreground transition ease-in-out duration-300 tracking-tight"
+                  : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              }
             >
               Incidents
             </Link>
             <Link
               href="/statistics"
-              className="text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              className={
+                pathname === "/statistics"
+                  ? "text-foreground transition ease-in-out duration-300 tracking-tight"
+                  : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              }
             >
               Statistics
             </Link>
             <Link
               href="/about"
-              className="text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              className={
+                pathname === "/about"
+                  ? "text-foreground transition ease-in-out duration-300 tracking-tight"
+                  : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              }
             >
               About
             </Link>
