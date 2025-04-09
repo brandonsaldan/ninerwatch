@@ -25,7 +25,7 @@ export default function StatisticsPage() {
     "month"
   );
   const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
-  const [autoRotate, setAutoRotate] = useState(true);
+  const [autoRotate] = useState(true);
 
   const filteredIncidents = useMemo(() => {
     if (timeRange === "all") return incidents;
@@ -172,7 +172,7 @@ export default function StatisticsPage() {
     });
 
     return Object.entries(locationData)
-      .filter(([_, data]) => data.count >= 3)
+      .filter((entry) => entry[1].count >= 3)
       .map(([location, data]) => {
         const noise = Math.floor(Math.random() * 5);
         const dangerScore = Math.round(
@@ -453,7 +453,7 @@ export default function StatisticsPage() {
     });
 
     return Object.entries(categoryData)
-      .filter(([_, data]) => data.count >= 2)
+      .filter((entry) => entry[1].count >= 2)
       .map(([category, data]) => {
         const reportRate = data.count > 0 ? data.reportRate / data.count : 0;
         const weightedScore = data.count * 0.3 + reportRate * 70;
@@ -799,7 +799,7 @@ export default function StatisticsPage() {
                 </span>
               </CardTitle>
               <CardDescription>
-                When you're most likely to get in trouble
+                When you&apos;re most likely to get in trouble
               </CardDescription>
             </CardHeader>
             <CardContent>

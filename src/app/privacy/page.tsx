@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/header";
@@ -10,25 +10,28 @@ import Link from "next/link";
 export default function PrivacyPolicy() {
   const [activeSection, setActiveSection] = useState("overview");
 
-  const sections = [
-    { id: "overview", icon: "🔒", title: "Overview", color: "blue" },
-    {
-      id: "collection",
-      icon: "📊",
-      title: "Information We Collect",
-      color: "indigo",
-    },
-    {
-      id: "usage",
-      icon: "🔍",
-      title: "How We Use Information",
-      color: "green",
-    },
-    { id: "cookies", icon: "🍪", title: "Cookies", color: "yellow" },
-    { id: "sharing", icon: "🔄", title: "Data Sharing", color: "pink" },
-    { id: "security", icon: "🛡️", title: "Data Security", color: "red" },
-    { id: "contact", icon: "📨", title: "Contact Us", color: "blue" },
-  ];
+  const sections = useMemo(
+    () => [
+      { id: "overview", icon: "🔒", title: "Overview", color: "blue" },
+      {
+        id: "collection",
+        icon: "📊",
+        title: "Information We Collect",
+        color: "indigo",
+      },
+      {
+        id: "usage",
+        icon: "🔍",
+        title: "How We Use Information",
+        color: "green",
+      },
+      { id: "cookies", icon: "🍪", title: "Cookies", color: "yellow" },
+      { id: "sharing", icon: "🔄", title: "Data Sharing", color: "pink" },
+      { id: "security", icon: "🛡️", title: "Data Security", color: "red" },
+      { id: "contact", icon: "📨", title: "Contact Us", color: "blue" },
+    ],
+    []
+  );
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -65,7 +68,7 @@ export default function PrivacyPolicy() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [activeSection]);
+  }, [activeSection, sections]);
 
   return (
     <div className="min-h-screen bg-background">

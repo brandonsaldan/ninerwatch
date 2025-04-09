@@ -33,7 +33,9 @@ export function useTopSnitchRating() {
         if (reportedDate >= thirtyDaysAgo) {
           locationCounts[location].recent += 1;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error parsing date:", incident.time_reported, e);
+      }
     });
 
     let maxScore = 0;
@@ -41,7 +43,7 @@ export function useTopSnitchRating() {
     let topIncidents = 0;
 
     Object.entries(locationCounts)
-      .filter(([_, stats]) => stats.total >= 3)
+      .filter((entry) => entry[1].total >= 3)
       .forEach(([location, stats]) => {
         const baseScore = Math.min(50, Math.round(Math.sqrt(stats.total) * 10));
 
@@ -110,7 +112,7 @@ export function SnitchRating() {
     });
 
     const ratingsArray = Object.entries(locationCounts)
-      .filter(([_, stats]) => stats.total >= 3)
+      .filter((entry) => entry[1].total >= 3)
       .map(([location, stats]) => {
         const baseScore = Math.min(50, Math.round(Math.sqrt(stats.total) * 10));
 

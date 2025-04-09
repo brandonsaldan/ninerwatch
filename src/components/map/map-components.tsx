@@ -424,12 +424,12 @@ export default function MapComponents({ incidentId }: { incidentId?: string }) {
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
 
-      {Object.entries(locationGroups).map(([_, groupedIncidents]) =>
-        groupedIncidents.map((incident, index) => {
+      {Object.entries(locationGroups).map((entry) =>
+        entry[1].map((incident, index) => {
           const [adjustedLat, adjustedLng] = adjustMarkerPosition(
             incident,
             index,
-            groupedIncidents.length
+            entry[1].length
           );
 
           return (
