@@ -469,12 +469,15 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    let subscription: ReturnType<typeof supabase.channel> | null = null;
+
     const setupData = async () => {
       const isConnected = await validateSupabaseConnection();
+
       if (isConnected) {
         fetchIncidents();
 
-        const subscription = supabase
+        subscription = supabase
           .channel("crime_incidents-changes")
           .on(
             "postgres_changes",
@@ -488,10 +491,6 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
             }
           )
           .subscribe();
-
-        return () => {
-          subscription.unsubscribe();
-        };
       } else {
         setError(
           "Could not connect to the database. Please check your connection and configuration."
@@ -501,6 +500,12 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     setupData();
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, []);
 
   const refreshIncidents = async () => {
