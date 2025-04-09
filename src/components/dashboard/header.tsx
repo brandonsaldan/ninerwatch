@@ -47,15 +47,26 @@ export default function Header() {
             >
               Statistics
             </Link>
+            <div className="border-l border-border h-6" />
             <Link
-              href="/about"
+              href="/terms"
               className={
-                pathname === "/about"
+                pathname === "/terms"
                   ? "text-foreground transition ease-in-out duration-300 tracking-tight"
                   : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
               }
             >
-              About
+              Terms of Service
+            </Link>
+            <Link
+              href="/privacy"
+              className={
+                pathname === "/privacy"
+                  ? "text-foreground transition ease-in-out duration-300 tracking-tight"
+                  : "text-muted-foreground hover:text-foreground transition ease-in-out duration-300"
+              }
+            >
+              Privacy Policy
             </Link>
           </nav>
         </div>
