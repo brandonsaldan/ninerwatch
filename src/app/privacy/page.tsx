@@ -325,7 +325,7 @@ export default function PrivacyPolicy() {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 p-4 bg-black/20 rounded-lg">
+              <div className="mt-6 p-4 bg-black/20 rounded-lg border border-foreground-muted">
                 <p className="text-muted-foreground text-sm font-medium flex items-center gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
