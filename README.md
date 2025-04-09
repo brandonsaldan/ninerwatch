@@ -16,7 +16,7 @@
     <a href="#license">License</a>
   </p>
   
-  ![GitHub](https://img.shields.io/github/license/brandonsaldan/ninerwatch)
+  ![CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)
   ![GitHub stars](https://img.shields.io/github/stars/brandonsaldan/ninerwatch)
   ![GitHub issues](https://img.shields.io/github/issues/brandonsaldan/ninerwatch)
   
