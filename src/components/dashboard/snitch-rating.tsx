@@ -182,7 +182,7 @@ export function SnitchRating() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-xs text-muted-foreground mb-3 flex justify-between">
+        <div className="text-sm text-muted-foreground mb-3 flex justify-between">
           <div>Locations ranked by current watchfulness</div>
         </div>
 
