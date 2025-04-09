@@ -13,12 +13,27 @@ export default function TermsOfService() {
   const sections = [
     { id: "overview", icon: "📋", title: "Overview", color: "blue" },
     { id: "acceptance", icon: "✅", title: "Acceptance", color: "green" },
+    { id: "unofficial", icon: "🚩", title: "Unofficial Status", color: "red" },
     { id: "datasources", icon: "🔍", title: "Data Sources", color: "indigo" },
     { id: "disclaimer", icon: "⚠️", title: "Disclaimer", color: "yellow" },
     { id: "content", icon: "💬", title: "User Content", color: "pink" },
     { id: "privacy", icon: "🔒", title: "Privacy", color: "orange" },
     { id: "prohibited", icon: "⛔", title: "Prohibited Uses", color: "red" },
     { id: "modifications", icon: "📱", title: "Modifications", color: "cyan" },
+    {
+      id: "intellectual",
+      icon: "©️",
+      title: "Intellectual Property",
+      color: "purple",
+    },
+    { id: "academic", icon: "🎓", title: "Academic Freedom", color: "green" },
+    {
+      id: "indemnification",
+      icon: "🛡️",
+      title: "Indemnification",
+      color: "blue",
+    },
+    { id: "severability", icon: "⚖️", title: "Severability", color: "purple" },
     { id: "legal", icon: "⚖️", title: "Legal", color: "purple" },
     { id: "contact", icon: "📨", title: "Contact", color: "blue" },
   ];
@@ -163,18 +178,20 @@ export default function TermsOfService() {
                     Overview
                   </h2>
                   <p className="text-lg">
-                    Welcome to NinerWatch, a campus incident reporting platform
-                    designed to keep the UNC Charlotte community informed about
-                    safety incidents on and around campus. By accessing or using
+                    Welcome to NinerWatch, an independently developed platform
+                    designed to aggregate and display publicly available campus
+                    safety incidents at UNC Charlotte. By accessing or using
                     NinerWatch, you agree to be bound by these Terms of Service.
                   </p>
                   <div className="flex items-center p-4 bg-gradient-to-r from-[#ff4b66]/10 to-[#ff4b66]/5 rounded-lg shadow-sm border border-[#ff4b66]/20">
                     <div className="text-2xl mr-4 text-[#ff4b66]">⚠️</div>
                     <p className="text-[#ff4b66]">
                       <strong>IMPORTANT:</strong> NinerWatch is not affiliated
-                      with or endorsed by UNC Charlotte. This is an unofficial
-                      service created to aggregate and display publicly
-                      available campus safety information.
+                      with, endorsed by, sponsored by, or officially connected
+                      to UNC Charlotte or any of its departments, offices, or
+                      representatives. This is an independent project created by
+                      a student developer exercising their right to academic
+                      freedom and free speech.
                     </p>
                   </div>
                 </div>
@@ -274,6 +291,155 @@ export default function TermsOfService() {
           </div>
         </div>
 
+        <div id="unofficial" className="mb-12 scroll-mt-24">
+          <div className="relative">
+            <div className="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-red-500/5 blur-3xl"></div>
+            <Card className="border-red-500/20 shadow-xl bg-black/20 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-red-500/10 to-transparent border-b border-red-500/10">
+                <div className="flex items-center">
+                  <div className="h-12 w-12 rounded-full bg-red-500/20 flex items-center justify-center text-2xl text-red-500 mr-4">
+                    🚩
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl">
+                      Unofficial Status Declaration
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Important information about the relationship between
+                      NinerWatch and UNC Charlotte
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="md:w-1/4 flex justify-center">
+                    <div className="h-28 w-28 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-4xl text-red-500">
+                      📢
+                    </div>
+                  </div>
+                  <div className="md:w-3/4 space-y-4">
+                    <p>
+                      NinerWatch is an independently developed project created
+                      by a student developer exercising their constitutional
+                      right to free speech and academic inquiry. It is designed
+                      to present publicly available information about campus
+                      safety in an accessible format for educational and
+                      informational purposes.
+                    </p>
+
+                    <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20 font-medium">
+                      <p className="text-red-500">
+                        NinerWatch is not affiliated with, endorsed by,
+                        sponsored by, or officially connected to the University
+                        of North Carolina at Charlotte, its administration, any
+                        of its departments, offices, or representatives. Any
+                        references to UNC Charlotte or use of university-related
+                        terms are made strictly for descriptive and
+                        informational purposes and do not imply any official
+                        relationship.
+                      </p>
+                    </div>
+
+                    <p>
+                      Any actions taken against the developer of NinerWatch or
+                      against the service itself by the University for
+                      aggregating, displaying, or commenting on publicly
+                      available information would potentially constitute an
+                      infringement upon the developer's established
+                      constitutional rights to free speech, free expression, and
+                      academic freedom.
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span className="text-sm">
+                          Protected academic expression
+                        </span>
+                      </div>
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span className="text-sm">
+                          Personal, non-institutional project
+                        </span>
+                      </div>
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span className="text-sm">
+                          No official university endorsement
+                        </span>
+                      </div>
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span className="text-sm">
+                          Uses only publicly available data
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
         <div id="datasources" className="mb-12 scroll-mt-24">
           <div className="rounded-xl overflow-hidden backdrop-blur-sm shadow-md">
             <div className="bg-gradient-to-r from-indigo-500/10 to-indigo-600/5 px-6 py-4 border-b border-indigo-500/10">
@@ -290,10 +456,10 @@ export default function TermsOfService() {
                   <p>
                     NinerWatch aggregates information from publicly available
                     sources, primarily the UNC Charlotte Police Department's
-                    published police logs. We make reasonable efforts to ensure
-                    that information is accurate, but we cannot guarantee the
-                    accuracy, completeness, or timeliness of information
-                    presented.
+                    published police logs and other public domain information.
+                    We make reasonable efforts to ensure that information is
+                    accurate, but we cannot guarantee the accuracy,
+                    completeness, or timeliness of information presented.
                   </p>
                   <div className="bg-gradient-to-r from-black/30 to-black/10 rounded-lg p-4">
                     <ul className="space-y-2 text-sm">
@@ -301,19 +467,26 @@ export default function TermsOfService() {
                         <div className="h-5 w-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-500 text-xs">
                           →
                         </div>
-                        Official police logs and reports
+                        Official police logs and reports published online
                       </li>
                       <li className="flex items-center gap-2">
                         <div className="h-5 w-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-500 text-xs">
                           →
                         </div>
-                        Public campus safety announcements
+                        Public campus safety announcements and notices
                       </li>
                       <li className="flex items-center gap-2">
                         <div className="h-5 w-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-500 text-xs">
                           →
                         </div>
-                        NinerAlerts and emergency notifications
+                        NinerAlerts and emergency notifications in the public
+                        domain
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-5 w-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-500 text-xs">
+                          →
+                        </div>
+                        Publicly available news articles and reports
                       </li>
                     </ul>
                   </div>
@@ -325,10 +498,13 @@ export default function TermsOfService() {
                       Information Processing
                     </h3>
                     <p className="text-sm">
-                      Information is processed automatically from PDFs published
-                      by campus authorities and may contain errors or omissions.
-                      Always refer to official university channels for the most
-                      accurate and up-to-date safety information.
+                      Information is processed automatically from PDFs and other
+                      public documents published by campus authorities. This
+                      service does not access, use, or distribute any
+                      privileged, private, confidential, or sensitive
+                      information. All data processed by NinerWatch is already
+                      in the public domain and freely accessible to any member
+                      of the public.
                     </p>
                   </div>
                   <div className="bg-black/40 p-4 rounded-lg">
@@ -349,12 +525,18 @@ export default function TermsOfService() {
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                       </svg>
-                      <h3 className="font-medium text-sm">Data Limitations</h3>
+                      <h3 className="font-medium text-sm">
+                        Legal Right to Access and Use
+                      </h3>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      NinerWatch may not reflect all campus incidents. Some
-                      incidents may be unreported or pending investigation by
-                      campus authorities.
+                      The developer of NinerWatch has the legal right to access,
+                      process, display, and comment on publicly available
+                      information as protected by the First Amendment and
+                      principles of academic freedom. No licensing, permission,
+                      or authorization is required from the University to
+                      utilize public information for educational or
+                      informational purposes.
                     </p>
                   </div>
                 </div>
@@ -399,18 +581,24 @@ export default function TermsOfService() {
                     </p>
 
                     <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20">
-                      <p className="font-medium text-yellow-500">
+                      <p className="font-medium text-yellow-500 mb-2">
                         NinerWatch is not an emergency service. For emergencies,
                         always call 911 or contact the UNC Charlotte Police
                         Department directly.
                       </p>
+                      <p className="text-sm">
+                        Information provided through NinerWatch should not be
+                        relied upon for personal safety or security decisions.
+                        Always verify information through official university
+                        channels during emergency situations.
+                      </p>
                     </div>
 
                     <p>
-                      In no event shall NinerWatch, its operators, contributors,
+                      In no event shall NinerWatch, its developer, contributors,
                       or affiliates be liable for any direct, indirect,
                       incidental, special, or consequential damages arising out
-                      of or in any way connected with the use of this service.
+                      of or in any way connected with:
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -436,32 +624,8 @@ export default function TermsOfService() {
                             ></line>
                           </svg>
                         </div>
-                        <span className="text-sm">No warranty of accuracy</span>
-                      </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500 text-sm">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line
-                              x1="4.93"
-                              y1="4.93"
-                              x2="19.07"
-                              y2="19.07"
-                            ></line>
-                          </svg>
-                        </div>
                         <span className="text-sm">
-                          No warranty of completeness
+                          Use of or inability to use this service
                         </span>
                       </div>
                       <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
@@ -487,7 +651,7 @@ export default function TermsOfService() {
                           </svg>
                         </div>
                         <span className="text-sm">
-                          No warranty of timeliness
+                          Accuracy of information displayed
                         </span>
                       </div>
                       <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
@@ -513,9 +677,26 @@ export default function TermsOfService() {
                           </svg>
                         </div>
                         <span className="text-sm">
-                          Not an official university service
+                          Actions taken based on information provided
                         </span>
                       </div>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-black/30 rounded-lg">
+                      <p className="text-yellow-500 font-medium">
+                        Non-liability Clause:
+                      </p>
+                      <p className="text-sm mt-2">
+                        The developer of NinerWatch expressly disclaims any
+                        liability for academic or disciplinary actions taken by
+                        the University or any of its representatives against
+                        users or the developer for accessing, viewing,
+                        discussing, or otherwise interacting with publicly
+                        available information through this service. Any such
+                        actions could potentially represent an infringement upon
+                        constitutionally protected rights of free speech and
+                        academic freedom.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -550,11 +731,12 @@ export default function TermsOfService() {
                 <div className="md:w-2/3 md:pl-6 md:border-l border-pink-500/20">
                   <div className="space-y-4">
                     <p>
-                      NinerWatch allows users to contribute comments and
-                      discussion on reported incidents. By submitting content,
-                      you grant NinerWatch a non-exclusive, royalty-free,
-                      perpetual, irrevocable right to use, reproduce, modify,
-                      adapt, publish, translate, and distribute such content.
+                      NinerWatch allows users to contribute anonymous comments
+                      and discussion on reported incidents. By submitting
+                      content, you grant NinerWatch a non-exclusive,
+                      royalty-free, perpetual, irrevocable right to use,
+                      reproduce, modify, adapt, publish, translate, and
+                      distribute such content.
                     </p>
                     <p>
                       You are solely responsible for content you submit. You
@@ -611,12 +793,18 @@ export default function TermsOfService() {
                         >
                           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                         </svg>
-                        <h3 className="font-medium">Content Moderation</h3>
+                        <h3 className="font-medium">
+                          Content Moderation and Protected Speech
+                        </h3>
                       </div>
                       <p className="text-sm">
-                        We reserve the right to remove any content and/or
-                        terminate access for users who violate these standards
-                        at our sole discretion.
+                        While we reserve the right to remove content that
+                        violates these standards, we recognize and respect all
+                        users' right to engage in constitutionally protected
+                        speech, including criticism of institutional policies,
+                        public figures, or campus safety practices. NinerWatch
+                        promotes open dialogue while maintaining community
+                        standards.
                       </p>
                     </div>
                   </div>
@@ -674,7 +862,9 @@ export default function TermsOfService() {
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                       </svg>
                       NinerWatch is designed to be anonymous. No personal
-                      information is collected when using the service.
+                      information is collected when using the service. The
+                      service deliberately avoids collecting any information
+                      that could identify individual users.
                     </p>
                   </div>
                 </div>
@@ -710,7 +900,7 @@ export default function TermsOfService() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-red-500 mr-2">•</span> Impersonate any
-                    person or entity
+                    person or entity, including university officials
                   </li>
                   <li className="flex items-start">
                     <span className="text-red-500 mr-2">•</span> Upload or
@@ -766,29 +956,31 @@ export default function TermsOfService() {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     The service may evolve over time with new features or
-                    changes to existing functionality.
+                    changes to existing functionality to better serve the
+                    community's need for transparency and information.
                   </p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div id="legal" className="scroll-mt-24">
+          <div id="intellectual" className="scroll-mt-24">
             <Card className="border-purple-500/20 shadow h-full">
               <CardHeader className="bg-gradient-to-r from-purple-500/10 to-transparent">
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <span className="text-purple-500">⚖️</span> Governing Law
+                  <span className="text-purple-500">©️</span> Intellectual
+                  Property
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pt-4">
                 <div className="relative">
                   <div className="absolute -z-10 top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-xl"></div>
                   <p className="text-sm">
-                    These Terms of Service shall be governed by the laws of the
-                    State of North Carolina, without regard to its conflict of
-                    law provisions. You agree to submit to the personal and
-                    exclusive jurisdiction of the courts located within
-                    Mecklenburg County, North Carolina.
+                    NinerWatch respects intellectual property rights and expects
+                    users to do the same. The service, its original content,
+                    features, and functionality are owned by the developer and
+                    are protected by copyright, trademark, and other
+                    intellectual property laws.
                   </p>
                 </div>
                 <div className="bg-black/30 p-3 rounded-lg mt-4">
@@ -813,13 +1005,244 @@ export default function TermsOfService() {
                       </svg>
                     </div>
                     <span className="text-xs font-medium">
-                      Dispute Resolution
+                      Fair Use & Public Information
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Any dispute arising from these Terms will be resolved in the
-                    appropriate courts in North Carolina.
+                    The processing and display of publicly available information
+                    falls under fair use provisions and constitutes protected
+                    speech. No claim to ownership is made over public records or
+                    information published by the University.
                   </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <div id="academic" className="mb-12 scroll-mt-24">
+          <div className="relative">
+            <div className="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-green-500/5 blur-3xl"></div>
+            <Card className="border-green-500/20 shadow-xl bg-black/20 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-green-500/10 to-transparent border-b border-green-500/10">
+                <div className="flex items-center">
+                  <div className="h-12 w-12 rounded-full bg-green-500/20 flex items-center justify-center text-2xl text-green-500 mr-4">
+                    🎓
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl">
+                      Academic Freedom and Free Speech
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Protection of constitutional rights in the academic
+                      context
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <p>
+                    NinerWatch was created by a student developer exercising
+                    their rights to academic freedom and free expression. The
+                    collection, analysis, and discussion of publicly available
+                    campus safety information constitutes protected speech and
+                    academic inquiry as recognized by U.S. courts and academic
+                    institutions.
+                  </p>
+
+                  <div className="bg-gradient-to-r from-green-500/10 to-green-500/5 p-5 rounded-xl border border-green-500/10 relative">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/5 rounded-full blur-xl"></div>
+                    <h3 className="flex items-center gap-2 font-medium mb-2">
+                      <div className="h-6 w-6 flex items-center justify-center rounded-full bg-green-500/20 text-green-500 text-xs">
+                        1
+                      </div>
+                      Institutional Retaliation Protection
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Any attempt by the University or its representatives to
+                      penalize, discipline, or retaliate against the developer
+                      or users of NinerWatch for accessing, displaying, or
+                      discussing publicly available information may potentially
+                      constitute an infringement of protected free speech rights
+                      and academic freedom.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-green-500/10 to-green-500/5 p-5 rounded-xl border border-green-500/10 relative">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/5 rounded-full blur-xl"></div>
+                    <h3 className="flex items-center gap-2 font-medium mb-2">
+                      <div className="h-6 w-6 flex items-center justify-center rounded-full bg-green-500/20 text-green-500 text-xs">
+                        2
+                      </div>
+                      Protected Academic Activities
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Activities such as data analysis, visualization of public
+                      information, community discussion, and software
+                      development for educational and informational purposes are
+                      recognized as protected forms of academic inquiry and
+                      exercise of free speech rights.
+                    </p>
+                  </div>
+
+                  <div className="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
+                    <p className="font-medium text-green-500">
+                      This project constitutes protected academic expression,
+                      and users and the developer maintain their rights to
+                      access, analyze, and discuss publicly available
+                      information without institutional interference or
+                      reprisal.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <div id="indemnification" className="mb-12 scroll-mt-24">
+          <div className="rounded-xl overflow-hidden backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-500/10 to-blue-500/5 p-8">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="md:w-1/3 flex flex-col items-center justify-center">
+                  <div className="h-20 w-20 rounded-full bg-blue-500/20 flex items-center justify-center text-3xl text-blue-500 mb-4">
+                    🛡️
+                  </div>
+                  <h2 className="text-2xl font-bold text-center mb-2">
+                    Indemnification
+                  </h2>
+                </div>
+                <div className="md:w-2/3 md:pl-6 md:border-l border-blue-500/20">
+                  <div className="space-y-4">
+                    <p>
+                      You agree to defend, indemnify, and hold harmless
+                      NinerWatch, its developer, contributors, and affiliates
+                      from and against any claims, liabilities, damages,
+                      judgments, awards, losses, costs, expenses, or fees
+                      (including reasonable attorneys' fees) arising out of or
+                      relating to your violation of these Terms of Service or
+                      your use of the service.
+                    </p>
+
+                    <div className="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20 mt-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-blue-500"
+                        >
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        <h3 className="font-medium">Reciprocal Protection</h3>
+                      </div>
+                      <p className="text-sm">
+                        Similarly, the developer and maintainers of NinerWatch
+                        will make reasonable efforts to protect users from undue
+                        harassment, threats, or retaliatory actions resulting
+                        from their legitimate use of this service for
+                        educational and informational purposes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="severability" className="mb-12 scroll-mt-24">
+          <div className="border border-border rounded-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-500/10 to-transparent p-4 flex items-center">
+              <div className="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center text-xl text-purple-500 mr-3">
+                ⚖️
+              </div>
+              <h2 className="text-xl font-bold">Severability</h2>
+            </div>
+            <div className="p-6 bg-black/20">
+              <div className="space-y-3">
+                <p>
+                  If any provision of these Terms of Service is found to be
+                  unenforceable or invalid, that provision will be limited or
+                  eliminated to the minimum extent necessary so that the Terms
+                  of Service will otherwise remain in full force and effect and
+                  enforceable.
+                </p>
+                <div className="bg-black/30 p-4 rounded-lg border border-purple-500/10">
+                  <p className="text-sm">
+                    The invalidity of any particular provision shall not affect
+                    other provisions of this agreement, which shall continue in
+                    full force and effect. This ensures that even if a court
+                    were to find certain provisions unenforceable, the remaining
+                    terms would continue to protect both users and the
+                    developer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="legal" className="mb-12 scroll-mt-24">
+          <div className="relative">
+            <div className="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-purple-500/5 blur-3xl"></div>
+            <Card className="border-purple-500/20 shadow-xl bg-black/20 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-purple-500/10 to-transparent border-b border-purple-500/10">
+                <div className="flex items-center">
+                  <div className="h-12 w-12 rounded-full bg-purple-500/20 flex items-center justify-center text-2xl text-purple-500 mr-4">
+                    ⚖️
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl">Governing Law</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Legal jurisdiction and dispute resolution
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <p>
+                    These Terms of Service shall be governed by the laws of the
+                    State of North Carolina, without regard to its conflict of
+                    law provisions. This agreement is further protected by
+                    applicable federal laws governing free speech, academic
+                    freedom, and access to public information.
+                  </p>
+
+                  <div className="bg-gradient-to-r from-black/30 to-black/10 p-4 rounded-lg">
+                    <p className="mb-2 font-medium">Dispute Resolution:</p>
+                    <p className="text-sm text-muted-foreground">
+                      You agree to submit to the personal and exclusive
+                      jurisdiction of the courts located within Mecklenburg
+                      County, North Carolina, for the resolution of any disputes
+                      arising from these Terms of Service. If legal action is
+                      instituted, the prevailing party shall be entitled to
+                      recover from the other party its reasonable attorney's
+                      fees and costs incurred in such action.
+                    </p>
+                  </div>
+
+                  <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-500/20">
+                    <p className="font-medium text-purple-500">
+                      Constitutional Protections:
+                    </p>
+                    <p className="text-sm mt-2">
+                      These Terms of Service shall be interpreted in accordance
+                      with and benefiting from the protections afforded by the
+                      First Amendment of the United States Constitution and
+                      relevant state constitutional provisions protecting free
+                      speech, academic freedom, and the right to access and
+                      discuss public information.
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
