@@ -220,7 +220,7 @@ export default function TermsOfService() {
             </div>
             <div className="md:w-2/3">
               <div className="space-y-6">
-                <div className="bg-black/20 p-6 rounded-xl backdrop-blur-sm">
+                <div className="bg-black/20 p-6 rounded-xl backdrop-blur-sm border border-foreground-muted">
                   <p className="mb-4">
                     By accessing or using NinerWatch, you acknowledge that you
                     have read, understood, and agree to be bound by these Terms
@@ -352,7 +352,7 @@ export default function TermsOfService() {
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -372,7 +372,7 @@ export default function TermsOfService() {
                           Protected academic expression
                         </span>
                       </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -392,7 +392,7 @@ export default function TermsOfService() {
                           Personal, non-institutional project
                         </span>
                       </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -412,7 +412,7 @@ export default function TermsOfService() {
                           No official university endorsement
                         </span>
                       </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -508,7 +508,7 @@ export default function TermsOfService() {
                       of the public.
                     </p>
                   </div>
-                  <div className="bg-black/40 p-4 rounded-lg">
+                  <div className="bg-black/40 p-4 rounded-lg border border-foreground-muted">
                     <div className="flex items-center gap-2 mb-1">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -604,7 +604,7 @@ export default function TermsOfService() {
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -630,7 +630,7 @@ export default function TermsOfService() {
                           Use of or inability to use this service
                         </span>
                       </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -656,7 +656,7 @@ export default function TermsOfService() {
                           Accuracy of information displayed
                         </span>
                       </div>
-                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2">
+                      <div className="bg-black/30 p-3 rounded-lg flex items-center gap-2 border border-foreground-muted">
                         <div className="h-8 w-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500 text-sm">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -684,7 +684,7 @@ export default function TermsOfService() {
                       </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-black/30 rounded-lg">
+                    <div className="mt-6 p-4 bg-black/30 rounded-lg border border-foreground-muted">
                       <p className="text-yellow-500 font-medium">
                         Non-liability Clause:
                       </p>
