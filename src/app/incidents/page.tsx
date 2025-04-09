@@ -73,7 +73,7 @@ export default function IncidentsPage() {
         }
 
         groups[dateKey].push(incident);
-      } catch (e) {
+      } catch (_) {
         const dateKey = "Unknown Date";
         if (!groups[dateKey]) {
           groups[dateKey] = [];
@@ -89,7 +89,7 @@ export default function IncidentsPage() {
 
   const totalPages = Math.ceil(
     Object.keys(
-      groupedIncidents.reduce((acc, [_, incidents]) => {
+      groupedIncidents.reduce((acc, [, incidents]) => {
         incidents.forEach((incident) => {
           acc[incident.id] = true;
         });
