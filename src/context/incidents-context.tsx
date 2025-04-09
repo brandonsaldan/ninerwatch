@@ -402,20 +402,35 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
 
-      const { data, error: incidentsError } = await supabase
-        .from("crime_incidents")
-        .select("*")
-        .order("time_reported", { ascending: false });
+      let allIncidents: Incident[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
 
-      if (incidentsError) {
-        throw incidentsError;
+      while (hasMore) {
+        const { data, error: incidentsError } = await supabase
+          .from("crime_incidents")
+          .select("*")
+          .order("time_reported", { ascending: false })
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (incidentsError) {
+          throw incidentsError;
+        }
+
+        if (!data || data.length === 0) {
+          hasMore = false;
+        } else {
+          allIncidents = [...allIncidents, ...data];
+          page++;
+
+          if (data.length < pageSize) {
+            hasMore = false;
+          }
+        }
       }
 
-      if (!data) {
-        throw new Error("No data returned from Supabase");
-      }
-
-      const sortedIncidents = [...data].sort((a, b) => {
+      const sortedIncidents = [...allIncidents].sort((a, b) => {
         const dateA = new Date(a.time_reported).getTime();
         const dateB = new Date(b.time_reported).getTime();
         return dateB - dateA;
@@ -431,23 +446,10 @@ export const IncidentsProvider = ({ children }: { children: ReactNode }) => {
 
       setIncidents(incidentsWithCoords);
 
-      const { data: typesData, error: typesError } = await supabase
-        .from("crime_incidents")
-        .select("incident_type")
-        .order("incident_type");
-
-      if (typesError) {
-        throw typesError;
-      }
-
-      if (!typesData) {
-        throw new Error("No types data returned from Supabase");
-      }
-
       const typeCounts: Record<string, number> = {};
-      typesData.forEach((item) => {
-        typeCounts[item.incident_type] =
-          (typeCounts[item.incident_type] || 0) + 1;
+      incidentsWithCoords.forEach((incident) => {
+        typeCounts[incident.incident_type] =
+          (typeCounts[incident.incident_type] || 0) + 1;
       });
 
       const typeCountArray: IncidentTypeCount[] = Object.entries(typeCounts)

@@ -553,8 +553,12 @@ export default function Home() {
                 🚨
               </div>
               <div>
-                <p className="text-2xl font-bold">{incidents.length}</p>
-                <p className="text-sm text-muted-foreground">Total Incidents</p>
+                <p className="text-2xl font-bold">
+                  {incidents.length.toLocaleString()}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  All Time Incidents
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -567,7 +571,7 @@ export default function Home() {
               <div>
                 <p className="text-2xl font-bold">{topHotSpot.location}</p>
                 <p className="text-sm text-muted-foreground">
-                  Top Hot Spot ({topHotSpot.count} incidents)
+                  Current Top Hot Spot ({topHotSpot.count} incidents)
                 </p>
               </div>
             </CardContent>

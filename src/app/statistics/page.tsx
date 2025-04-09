@@ -674,8 +674,8 @@ export default function StatisticsPage() {
                   {insights[currentInsightIndex].text}
                 </h3>
                 <div className="text-sm text-muted-foreground">
-                  Based on {filteredIncidents.length} incidents • Updated{" "}
-                  {new Date().toLocaleDateString()}
+                  Based on {filteredIncidents.length.toLocaleString()} incidents
+                  • Updated {new Date().toLocaleDateString()}
                 </div>
               </div>
               <div className="flex gap-2 mt-2 md:mt-0">
