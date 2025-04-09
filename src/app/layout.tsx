@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
   },
   viewport: "width=device-width, initial-scale=1",
   themeColor: "#000000",
