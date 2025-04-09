@@ -8,7 +8,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -19,11 +18,9 @@ import {
 import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
 import { useIncidents } from "@/context/incidents-context";
-import { formatDistanceToNow } from "date-fns";
-import Link from "next/link";
 
 export default function StatisticsPage() {
-  const { incidents, loading, error, incidentTypes } = useIncidents();
+  const { incidents, loading, error } = useIncidents();
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year" | "all">(
     "month"
   );
