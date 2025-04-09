@@ -1,7 +1,7 @@
 # NinerWatch 🕵️
 
 <div align="center">
-  <img src="public/og-image.png" alt="NinerWatch" width="1200" height="630" />
+  <img src="public/og-image.png" alt="NinerWatch" />
   
   <h3>Campus Safety Dashboard for UNC Charlotte</h3>
 
@@ -184,7 +184,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the CC Attribution-NonCommercial-ShareAlike 4.0 International License - see the LICENSE file for details.
 
 ## Acknowledgements
 
