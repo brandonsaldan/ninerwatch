@@ -125,6 +125,7 @@ const LOCATION_COORDINATES: Record<string, { lat: number; lng: number }> = {
   "Greek Village 11": { lat: 35.31276490087204, lng: -80.72600641354036 },
   "Greek Village 12": { lat: 35.31255817247919, lng: -80.72639832157877 },
   "Greek Village 13": { lat: 35.31255017744686, lng: -80.72681822305016 },
+  Greenhouse: { lat: 35.307851358547964, lng: -80.72970086144977 },
   "Grigg Hall": { lat: 35.31131792912825, lng: -80.74188240561898 },
   "Halton-Wagner": { lat: 35.30738168923848, lng: -80.73738195486152 },
   Harris: { lat: 35.30281037400156, lng: -80.73872110339664 },
@@ -292,6 +293,7 @@ const LOCATION_COORDINATES: Record<string, { lat: number; lng: number }> = {
   Smith: { lat: 35.30694960986669, lng: -80.73156517106565 },
   "Smith Building": { lat: 35.30694960986669, lng: -80.73156517106565 },
   "South Deck": { lat: 35.30068782330028, lng: -80.73616031782448 },
+  "South Village": { lat: 35.30265117840516, lng: -80.73364466711915 },
   "South Village Deck": { lat: 35.30068782330028, lng: -80.73616031782448 },
   SOVI: { lat: 35.30291844251696, lng: -80.73486179559463 },
   Stadium: {
