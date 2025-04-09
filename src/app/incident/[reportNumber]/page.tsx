@@ -2036,7 +2036,7 @@ export default function IncidentPage() {
           <div className="flex gap-2">
             <button
               onClick={() => {
-                navigator.share
+                return navigator.share
                   ? navigator
                       .share({
                         title: incident
