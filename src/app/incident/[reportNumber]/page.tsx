@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/header";
 import Footer from "@/components/dashboard/footer";
 import { supabase, Incident, Comment } from "@/lib/supabase";
+import { RealtimeChannel } from "@supabase/supabase-js";
 import {
   getIncidentComments,
   addComment,
@@ -69,32 +70,6 @@ export default function IncidentPage() {
             setComments(commentsData || []);
           }
           setLoadingComments(false);
-
-          const subscription = supabase
-            .channel(`incident-${data.id}-comments`)
-            .on(
-              "postgres_changes",
-              {
-                event: "*",
-                schema: "public",
-                table: "incident_comments",
-                filter: `incident_id=eq.${data.id}`,
-              },
-              async (payload) => {
-                console.log("Comment updated:", payload.eventType);
-                const { data: refreshedComments } = await getIncidentComments(
-                  data.id
-                );
-                if (refreshedComments) {
-                  setComments(refreshedComments);
-                }
-              }
-            )
-            .subscribe();
-
-          return () => {
-            subscription.unsubscribe();
-          };
         }
       } catch (err) {
         const errorMessage =
@@ -107,7 +82,39 @@ export default function IncidentPage() {
     };
 
     fetchIncidentData();
-  }, [originalReportNumber]);
+
+    let subscription: RealtimeChannel | null = null;
+
+    if (incident?.id) {
+      subscription = supabase
+        .channel(`incident-${incident.id}-comments`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "incident_comments",
+            filter: `incident_id=eq.${incident.id}`,
+          },
+          async (payload) => {
+            console.log("Comment updated:", payload.eventType);
+            const { data: refreshedComments } = await getIncidentComments(
+              incident.id
+            );
+            if (refreshedComments) {
+              setComments(refreshedComments);
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [originalReportNumber, incident?.id]);
 
   useEffect(() => {
     if (incident && comments.length > 0) {
