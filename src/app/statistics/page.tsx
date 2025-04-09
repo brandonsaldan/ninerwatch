@@ -317,6 +317,7 @@ export default function StatisticsPage() {
         "Crash",
         "Disabled Vehicle",
         "Vehicle Lockout",
+        "Reckless Driving",
       ],
       "Alcohol Related": [
         "Intoxicated",
@@ -378,6 +379,7 @@ export default function StatisticsPage() {
         "Suicide",
         "Suicide Attempt",
         "Suicide Ideation",
+        "Admit",
       ],
       Fire: [
         "Fire",

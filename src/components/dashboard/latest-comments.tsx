@@ -179,6 +179,7 @@ export function LatestComments() {
       "Abandoned Vehicle": "bg-orange-400/10 text-orange-400",
       "Parking Violation": "bg-orange-300/10 text-orange-300",
       "Illegal Parking": "bg-orange-300/10 text-orange-300",
+      "Reckless Driving": "bg-orange-300/10 text-orange-300",
 
       "Suspicious Person": "bg-blue-500/10 text-blue-500",
       "Suspicious Person/Arrest": "bg-blue-500/10 text-blue-500",
@@ -264,6 +265,7 @@ export function LatestComments() {
       "Assist Charlotte Fire Dept.": "bg-cyan-600/10 text-cyan-600",
 
       "Assist Other Agency": "bg-indigo-500/10 text-indigo-500",
+      Admit: "bg-indigo-500/10 text-indigo-500",
       Assist: "bg-indigo-500/10 text-indigo-500",
       "Assist Other": "bg-indigo-500/10 text-indigo-500",
       "Assist CMPD": "bg-indigo-500/10 text-indigo-500",

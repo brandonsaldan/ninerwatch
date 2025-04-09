@@ -622,6 +622,13 @@ export default function IncidentPage() {
         accentColor: "text-orange-500",
         accentBg: "bg-orange-500/10",
       },
+      "Reckless Driving": {
+        color: "text-orange-500",
+        emoji: "🚗",
+        bgGradient: "from-orange-500/5 to-orange-500/10",
+        accentColor: "text-orange-500",
+        accentBg: "bg-orange-500/10",
+      },
       "Hit & Run": {
         color: "text-orange-500",
         emoji: "🏃",
@@ -1321,6 +1328,13 @@ export default function IncidentPage() {
         accentBg: "bg-indigo-500/10",
       },
       Assist: {
+        color: "text-indigo-500",
+        emoji: "🤝",
+        bgGradient: "from-indigo-500/5 to-indigo-500/10",
+        accentColor: "text-indigo-500",
+        accentBg: "bg-indigo-500/10",
+      },
+      Admit: {
         color: "text-indigo-500",
         emoji: "🤝",
         bgGradient: "from-indigo-500/5 to-indigo-500/10",

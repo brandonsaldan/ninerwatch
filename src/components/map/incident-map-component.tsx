@@ -46,6 +46,7 @@ const incidentEmojis: Record<string, string> = {
   "Stolen Vehicle Parts/Property Theft": "🔧",
   "Motor Vehicle Theft": "🚗",
   "Motor Vehicle Theft/Arrest": "🚗",
+  "Reckless Driving": "🚗",
   Fraud: "💳",
   "Fraud/Arrest": "💳",
   "Identity Theft": "🪪",
@@ -180,6 +181,7 @@ const incidentEmojis: Record<string, string> = {
   "Assist Charlotte Fire Department": "🚒",
   "Assist Charlotte Fire Dept.": "🚒",
 
+  Admit: "🤝",
   "Assist Other Agency": "🤝",
   Assist: "🤝",
   "Assist Other": "🤝",

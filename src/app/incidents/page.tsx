@@ -129,6 +129,8 @@ export default function IncidentsPage() {
       "Larceny of Property": "📱",
       "Larceny of Vehicle": "🚗",
       "Stolen Vehicle": "🚗",
+      "Reckless Driving": "🚗",
+      Admit: "🤝",
       Burglary: "🏠",
       Robbery: "🔫",
       "Lost or Stolen": "🔎",
