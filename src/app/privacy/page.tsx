@@ -615,7 +615,7 @@ export default function PrivacyPolicy() {
                           <p className="text-sm text-muted-foreground">
                             When we believe release is appropriate to comply
                             with the law, enforce our site policies, or protect
-                            our or others' rights, property, or safety.
+                            our or others&apos; rights, property, or safety.
                           </p>
                         </div>
                       </div>
@@ -804,7 +804,7 @@ export default function PrivacyPolicy() {
               <div className="h-12 w-12 rounded-full bg-purple-500/20 flex items-center justify-center text-xl text-purple-500">
                 🧒
               </div>
-              <h2 className="text-xl font-bold">Children's Privacy</h2>
+              <h2 className="text-xl font-bold">Children&apos;s Privacy</h2>
             </div>
             <div className="space-y-4">
               <p>
@@ -839,7 +839,7 @@ export default function PrivacyPolicy() {
                 <p>
                   We may update our Privacy Policy from time to time. We will
                   notify you of any changes by posting the new Privacy Policy on
-                  this page and updating the "Last Updated" date.
+                  this page and updating the &quot;Last Updated&quot; date.
                 </p>
                 <div className="bg-black/20 p-4 rounded-lg flex items-center gap-3 border border-indigo-500/10">
                   <svg

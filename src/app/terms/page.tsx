@@ -346,7 +346,7 @@ export default function TermsOfService() {
                       against the service itself by the University for
                       aggregating, displaying, or commenting on publicly
                       available information would potentially constitute an
-                      infringement upon the developer's established
+                      infringement upon the developer&apos;s established
                       constitutional rights to free speech, free expression, and
                       academic freedom.
                     </p>
@@ -455,11 +455,12 @@ export default function TermsOfService() {
                 <div className="space-y-4">
                   <p>
                     NinerWatch aggregates information from publicly available
-                    sources, primarily the UNC Charlotte Police Department's
-                    published police logs and other public domain information.
-                    We make reasonable efforts to ensure that information is
-                    accurate, but we cannot guarantee the accuracy,
-                    completeness, or timeliness of information presented.
+                    sources, primarily the UNC Charlotte Police
+                    Department&apos;s published police logs and other public
+                    domain information. We make reasonable efforts to ensure
+                    that information is accurate, but we cannot guarantee the
+                    accuracy, completeness, or timeliness of information
+                    presented.
                   </p>
                   <div className="bg-gradient-to-r from-black/30 to-black/10 rounded-lg p-4">
                     <ul className="space-y-2 text-sm">
@@ -573,11 +574,12 @@ export default function TermsOfService() {
                   </div>
                   <div className="md:w-3/4 space-y-4">
                     <p>
-                      NinerWatch is provided "as is" without warranties of any
-                      kind, either express or implied. We do not warrant that
-                      the service will be uninterrupted or error-free, that
-                      defects will be corrected, or that the site or servers are
-                      free of viruses or other harmful components.
+                      NinerWatch is provided &quot;as is&quot; without
+                      warranties of any kind, either express or implied. We do
+                      not warrant that the service will be uninterrupted or
+                      error-free, that defects will be corrected, or that the
+                      site or servers are free of viruses or other harmful
+                      components.
                     </p>
 
                     <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20">
@@ -800,11 +802,11 @@ export default function TermsOfService() {
                       <p className="text-sm">
                         While we reserve the right to remove content that
                         violates these standards, we recognize and respect all
-                        users' right to engage in constitutionally protected
-                        speech, including criticism of institutional policies,
-                        public figures, or campus safety practices. NinerWatch
-                        promotes open dialogue while maintaining community
-                        standards.
+                        users&apos; right to engage in constitutionally
+                        protected speech, including criticism of institutional
+                        policies, public figures, or campus safety practices.
+                        NinerWatch promotes open dialogue while maintaining
+                        community standards.
                       </p>
                     </div>
                   </div>
@@ -957,7 +959,7 @@ export default function TermsOfService() {
                   <p className="text-xs text-muted-foreground">
                     The service may evolve over time with new features or
                     changes to existing functionality to better serve the
-                    community's need for transparency and information.
+                    community&apos;s need for transparency and information.
                   </p>
                 </div>
               </CardContent>
@@ -1120,8 +1122,8 @@ export default function TermsOfService() {
                       NinerWatch, its developer, contributors, and affiliates
                       from and against any claims, liabilities, damages,
                       judgments, awards, losses, costs, expenses, or fees
-                      (including reasonable attorneys' fees) arising out of or
-                      relating to your violation of these Terms of Service or
+                      (including reasonable attorneys&apos; fees) arising out of
+                      or relating to your violation of these Terms of Service or
                       your use of the service.
                     </p>
 
@@ -1225,8 +1227,8 @@ export default function TermsOfService() {
                       County, North Carolina, for the resolution of any disputes
                       arising from these Terms of Service. If legal action is
                       instituted, the prevailing party shall be entitled to
-                      recover from the other party its reasonable attorney's
-                      fees and costs incurred in such action.
+                      recover from the other party its reasonable
+                      attorney&apos;s fees and costs incurred in such action.
                     </p>
                   </div>
 

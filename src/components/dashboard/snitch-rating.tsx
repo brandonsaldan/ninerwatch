@@ -104,7 +104,9 @@ export function SnitchRating() {
         if (reportedDate >= thirtyDaysAgo) {
           locationCounts[location].recent += 1;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error parsing date:", incident.time_reported, e);
+      }
     });
 
     const ratingsArray = Object.entries(locationCounts)

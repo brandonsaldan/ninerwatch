@@ -73,7 +73,7 @@ export default function IncidentsPage() {
         }
 
         groups[dateKey].push(incident);
-      } catch (_) {
+      } catch {
         const dateKey = "Unknown Date";
         if (!groups[dateKey]) {
           groups[dateKey] = [];
