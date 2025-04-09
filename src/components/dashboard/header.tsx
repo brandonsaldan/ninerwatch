@@ -42,13 +42,12 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Source link positioned on the right */}
         <div className="hidden md:block">
           <Link
             href="https://github.com/brandonsaldan/ninerwatch"
             className={linkStyle("https://github.com/brandonsaldan/ninerwatch")}
           >
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <SiGithub className="h-5 w-5" />
               <span>Source</span>
             </div>
