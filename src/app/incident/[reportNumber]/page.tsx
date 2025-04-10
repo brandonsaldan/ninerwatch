@@ -40,6 +40,8 @@ export default function IncidentPage() {
   const [originalThreadState, setOriginalThreadState] = useState<
     Comment[] | null
   >(null);
+  const [viewCount, setViewCount] = useState(0);
+  const [shareCount, setShareCount] = useState(0);
 
   useEffect(() => {
     const fetchIncidentData = async () => {
@@ -138,6 +140,72 @@ export default function IncidentPage() {
       setUserVotes(loadedVotes);
     }
   }, [incident, comments]);
+
+  useEffect(() => {
+    if (incident) {
+      setViewCount(incident.view_count || 0);
+      setShareCount(incident.share_count || 0);
+
+      const recordView = async () => {
+        try {
+          await fetch("/api/incidents/view", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ incidentId: incident.id }),
+          });
+        } catch (error) {
+          console.error("Error recording view:", error);
+        }
+      };
+
+      recordView();
+    }
+  }, [incident?.id, incident]);
+
+  const handleShare = async () => {
+    if (!incident) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `NinerWatch: ${incident.incident_type} Incident`,
+          text: `Check out this ${incident.incident_type} incident at ${incident.incident_location}`,
+          url: window.location.href,
+        });
+
+        await recordShare();
+        setShareCount((prev) => prev + 1);
+      } catch (err) {
+        console.log("Error sharing", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        await recordShare();
+        setShareCount((prev) => prev + 1);
+
+        alert("Link copied to clipboard!");
+      } catch (err) {
+        console.log("Error copying to clipboard", err);
+      }
+    }
+  };
+
+  const recordShare = async () => {
+    try {
+      await fetch("/api/incidents/share", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ incidentId: incident?.id }),
+      });
+    } catch (error) {
+      console.error("Error recording share:", error);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     try {
@@ -2042,25 +2110,7 @@ export default function IncidentPage() {
 
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                return navigator.share
-                  ? navigator
-                      .share({
-                        title: incident
-                          ? `NinerWatch: ${incident.incident_type} Incident`
-                          : "NinerWatch Incident",
-                        text: incident
-                          ? `Check out this ${incident.incident_type} incident at ${incident.incident_location}`
-                          : "Check out this incident on NinerWatch",
-                        url: window.location.href,
-                      })
-                      .catch((err) => console.log("Error sharing", err))
-                  : navigator.clipboard
-                      .writeText(window.location.href)
-                      .then(() => {
-                        alert("Link copied to clipboard!");
-                      });
-              }}
+              onClick={handleShare}
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
             >
               <svg
@@ -2392,7 +2442,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              23
+                              {viewCount}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Views
@@ -2402,7 +2452,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              5
+                              {shareCount}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Shares
