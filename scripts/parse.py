@@ -658,6 +658,8 @@ def insert_to_supabase(incidents):
                 
             try:
                 date_str = datetime.datetime.strptime(item["date_reported"], "%m/%d/%Y").strftime("%Y-%m-%d")
+                except ValueError:
+                    date_str = datetime.datetime.strptime(item['date_reported'], "%m-%d-%Y").strftime("%Y-%m-%d")
             except ValueError:
                 print(f"❌ Skipping bad date: {item['date_reported']} in report {item['report_number']}")
                 fail_log.write(f"Bad date format: {item['report_number']} | {item['date_reported']}\n")
