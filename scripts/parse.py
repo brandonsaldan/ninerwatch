@@ -659,7 +659,11 @@ def parse_incidents_from_file(path):
 
 def incident_exists(report_number):
     result = supabase.table("crime_incidents").select("id").eq("report_number", report_number).execute()
-    return len(result.data) > 0
+    exists = len(result.data) > 0
+    print(f"Checking if {report_number} exists: {exists}")
+    if exists:
+        print(f"Found existing record: {result.data}")
+    return exists
 
 def insert_to_supabase(incidents):
     added_count = 0
@@ -711,6 +715,7 @@ def insert_to_supabase(incidents):
                 result = supabase.table("crime_incidents").insert(data).execute()
                 print(f"✅ Insert response: {result}")
                 
+                time.sleep(1)
                 verify = supabase.table("crime_incidents").select("*").eq("report_number", item["report_number"]).execute()
                 if verify.data and len(verify.data) > 0:
                     added_count += 1
