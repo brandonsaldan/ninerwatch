@@ -27,8 +27,6 @@ export type Incident = {
   disposition: string | null;
   incident_description: string | null;
   created_at: string;
-  view_count: number;
-  share_count: number;
   lat?: number;
   lng?: number;
 };

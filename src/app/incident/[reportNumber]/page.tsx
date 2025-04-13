@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,12 +37,9 @@ export default function IncidentPage() {
   const [userVotes, setUserVotes] = useState<Record<string, number>>({});
   const [continuedThreadComment, setContinuedThreadComment] =
     useState<Comment | null>(null);
-  const [originalThreadState, setOriginalThreadState] = useState
+  const [originalThreadState, setOriginalThreadState] = useState<
     Comment[] | null
   >(null);
-  const [viewCount, setViewCount] = useState(0);
-  const [shareCount, setShareCount] = useState(0);
-  const viewRecorded = useRef(false);
 
   useEffect(() => {
     const fetchIncidentData = async () => {
@@ -61,9 +58,6 @@ export default function IncidentPage() {
         }
 
         setIncident(data);
-        // Set initial counts from data
-        setViewCount(data?.view_count || 0);
-        setShareCount(data?.share_count || 0);
 
         if (data) {
           setLoadingComments(true);
@@ -76,11 +70,6 @@ export default function IncidentPage() {
             setComments(commentsData || []);
           }
           setLoadingComments(false);
-          
-          // Record view only once after we've loaded incident data
-          if (!viewRecorded.current) {
-            recordView(data.id);
-          }
         }
       } catch (err) {
         const errorMessage =
@@ -149,99 +138,6 @@ export default function IncidentPage() {
       setUserVotes(loadedVotes);
     }
   }, [incident, comments]);
-
-  // Separate function to record a view
-  const recordView = async (incidentId: string) => {
-    if (viewRecorded.current) return;
-    
-    try {
-      viewRecorded.current = true; // Mark as recorded immediately to prevent duplicate calls
-      console.log("Recording view for incident:", incidentId);
-      
-      const response = await fetch("/api/incidents/view", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ incidentId }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log("View recorded successfully:", data);
-        if (data && typeof data.view_count === 'number') {
-          setViewCount(data.view_count);
-        }
-      } else {
-        console.error("Error recording view, server responded with:", response.status);
-      }
-    } catch (error) {
-      console.error("Error recording view:", error);
-    }
-  };
-
-  // Updated handleShare function
-  const handleShare = async () => {
-    if (!incident) return;
-    
-    try {
-      let sharedSuccessfully = false;
-      
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: `NinerWatch: ${incident.incident_type} Incident`,
-            text: `Check out this ${incident.incident_type} incident at ${incident.incident_location}`,
-            url: window.location.href,
-          });
-          sharedSuccessfully = true;
-        } catch (err) {
-          console.log("Web Share API error:", err);
-          // Fall back to clipboard if Web Share API fails or was canceled
-          sharedSuccessfully = await copyToClipboard();
-        }
-      } else {
-        // Browser doesn't support Web Share API, use clipboard
-        sharedSuccessfully = await copyToClipboard();
-      }
-      
-      // Only record the share if sharing was successful
-      if (sharedSuccessfully) {
-        console.log("Recording share for incident:", incident.id);
-        const response = await fetch("/api/incidents/share", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ incidentId: incident.id }),
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Share recorded successfully:", data);
-          if (data && typeof data.share_count === 'number') {
-            setShareCount(data.share_count);
-          }
-        } else {
-          console.error("Error recording share, server responded with:", response.status);
-        }
-      }
-    } catch (error) {
-      console.error("Error in share process:", error);
-    }
-  };
-  
-  // Helper function for clipboard copy
-  const copyToClipboard = async (): Promise<boolean> => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-      return true;
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
-      return false;
-    }
-  };
 
   const formatDate = (dateString: string) => {
     try {
@@ -2146,7 +2042,25 @@ export default function IncidentPage() {
 
           <div className="flex gap-2">
             <button
-              onClick={handleShare}
+              onClick={() => {
+                return navigator.share
+                  ? navigator
+                      .share({
+                        title: incident
+                          ? `NinerWatch: ${incident.incident_type} Incident`
+                          : "NinerWatch Incident",
+                        text: incident
+                          ? `Check out this ${incident.incident_type} incident at ${incident.incident_location}`
+                          : "Check out this incident on NinerWatch",
+                        url: window.location.href,
+                      })
+                      .catch((err) => console.log("Error sharing", err))
+                  : navigator.clipboard
+                      .writeText(window.location.href)
+                      .then(() => {
+                        alert("Link copied to clipboard!");
+                      });
+              }}
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
             >
               <svg
@@ -2175,7 +2089,7 @@ export default function IncidentPage() {
           <IncidentSkeleton />
         ) : error ? (
           <div className="py-20 text-center">
-            <div className="bg-red-500/10 rounded-full h-20 w-20 flex items-center justify-center mb-4">
+            <div className="inline-block bg-red-500/10 rounded-full h-20 w-20 flex items-center justify-center mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -2478,7 +2392,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              {viewCount}
+                              23
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Views
@@ -2488,7 +2402,7 @@ export default function IncidentPage() {
                             <div
                               className={`text-2xl font-bold ${theme.accentColor}`}
                             >
-                              {shareCount}
+                              5
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Shares
