@@ -11,9 +11,6 @@ PDF_DIR = "pdfs_2025"
 TXT_DIR = "txt_exports"
 FAILED_EXPORT = "failed_incidents.txt"
 
-print(f"Using Supabase URL: {SUPABASE_URL}")
-print(f"Supabase key set: {'Yes' if SUPABASE_KEY else 'No'}")
-
 incident_type_set = set([
     "911 Hang Up",
     "Abandoned Vehicle",
@@ -544,15 +541,7 @@ incident_location_set = set([
     "Woodward Hall"
 ])
 
-try:
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-    
-    result = supabase.table("crime_incidents").select("count").limit(1).execute()
-    print(f"Supabase connection test: Success - Got response: {result}")
-except Exception as e:
-    print(f"Supabase connection test FAILED: {e}")
-    print("Detailed error:", str(e))
-    supabase = None
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def convert_pdfs_to_text():
     os.makedirs(TXT_DIR, exist_ok=True)
@@ -569,11 +558,7 @@ def convert_time(date_str, time_str):
         dt = datetime.datetime.strptime(date_str + time_str, "%m/%d/%Y%H%M")
         return dt.isoformat() + "Z"
     except:
-        try:
-            dt = datetime.datetime.strptime(date_str + time_str, "%m-%d-%Y%H%M")
-            return dt.isoformat() + "Z"
-        except:
-            return None
+        return None
 
 def parse_incidents_from_file(path):
     with open(path, "r", encoding="utf-8") as file:
@@ -659,11 +644,7 @@ def parse_incidents_from_file(path):
 
 def incident_exists(report_number):
     result = supabase.table("crime_incidents").select("id").eq("report_number", report_number).execute()
-    exists = len(result.data) > 0
-    print(f"Checking if {report_number} exists: {exists}")
-    if exists:
-        print(f"Found existing record: {result.data}")
-    return exists
+    return len(result.data) > 0
 
 def insert_to_supabase(incidents):
     added_count = 0
@@ -674,7 +655,7 @@ def insert_to_supabase(incidents):
                 print(f"📋 Skipping existing record: {item['report_number']}")
                 skipped_count += 1
                 continue
-            
+                
             try:
                 date_formats = ["%m/%d/%Y", "%m-%d-%Y"]
                 parsed_date = None
@@ -693,7 +674,6 @@ def insert_to_supabase(incidents):
                     
             except ValueError as e:
                 print(f"❌ Skipping bad date: {item['date_reported']} in report {item['report_number']}")
-                print(f"  Date parsing error: {e}")
                 fail_log.write(f"Bad date format: {item['report_number']} | {item['date_reported']}\n")
                 continue
 
@@ -711,31 +691,16 @@ def insert_to_supabase(incidents):
             }
 
             try:
-                print(f"🔄 Attempting to insert {item['report_number']}...")
-                result = supabase.table("crime_incidents").insert(data).execute()
-                print(f"✅ Insert response: {result}")
-                
-                time.sleep(1)
-                verify = supabase.table("crime_incidents").select("*").eq("report_number", item["report_number"]).execute()
-                if verify.data and len(verify.data) > 0:
-                    added_count += 1
-                    print(f"✅ Verified in database: {item['report_number']}")
-                else:
-                    print(f"⚠️ Insert appeared to succeed but record not found on verification: {item['report_number']}")
-                    print(f"   Verification response: {verify}")
-                    fail_log.write(f"Insert verification fail: {item['report_number']} | No record found after insert\n")
+                supabase.table("crime_incidents").insert(data).execute()
+                added_count += 1
+                print(f"✅ Added incident: {item['report_number']}")
             except Exception as e:
                 print(f"❌ Failed to insert {item['report_number']}: {e}")
-                print(f"Detailed error: {str(e)}")
                 fail_log.write(f"Insert fail: {item['report_number']} | {str(e)}\n")
     
     return added_count, skipped_count
 
 if __name__ == "__main__":
-    if not supabase:
-        print("❌ Cannot proceed: No connection to Supabase")
-        exit(1)
-        
     convert_pdfs_to_text()
     total_added = 0
     total_skipped = 0
