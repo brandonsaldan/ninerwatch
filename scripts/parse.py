@@ -657,10 +657,22 @@ def insert_to_supabase(incidents):
                 continue
                 
             try:
-                date_str = datetime.datetime.strptime(item["date_reported"], "%m/%d/%Y").strftime("%Y-%m-%d")
-                except ValueError:
-                    date_str = datetime.datetime.strptime(item['date_reported'], "%m-%d-%Y").strftime("%Y-%m-%d")
-            except ValueError:
+                date_formats = ["%m/%d/%Y", "%m-%d-%Y"]
+                parsed_date = None
+                
+                for format in date_formats:
+                    try:
+                        parsed_date = datetime.datetime.strptime(item['date_reported'], format)
+                        break
+                    except ValueError:
+                        continue
+                
+                if parsed_date:
+                    date_str = parsed_date.strftime("%Y-%m-%d")
+                else:
+                    raise ValueError(f"Could not parse date: {item['date_reported']}")
+                    
+            except ValueError as e:
                 print(f"❌ Skipping bad date: {item['date_reported']} in report {item['report_number']}")
                 fail_log.write(f"Bad date format: {item['report_number']} | {item['date_reported']}\n")
                 continue
